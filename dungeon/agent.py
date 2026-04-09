@@ -13,7 +13,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
-from .tools import TOOL_SCHEMAS, execute_tool, is_semantic_success
+from .tools import DIRECTION_DELTAS, TOOL_SCHEMAS, execute_tool, is_semantic_success
 from .world import WorldState
 
 Pos = tuple[int, int]
@@ -204,6 +204,11 @@ class DungeonAgent:
         self.model = model
         self.belief = BeliefState(self_id=agent_id, position=starting_position)
         self.system_prompt = SYSTEM_PROMPT_TEMPLATE.format(agent_id=agent_id)
+        # Compact one-line feedback about the previous turn's tool call,
+        # rendered into the next user prompt so the model sees that (say) its
+        # last move bumped a wall. Cleared to None on success since the belief
+        # snapshot already reflects the new position.
+        self.last_action_feedback: Optional[str] = None
 
     def _build_user_prompt(self, ws: WorldState) -> str:
         unread = len(ws.inboxes[self.agent_id])
@@ -213,8 +218,12 @@ class DungeonAgent:
             if unread > 0
             else "You have no unread messages."
         )
+        feedback_block = (
+            f"\n{self.last_action_feedback}\n" if self.last_action_feedback else ""
+        )
         return (
             f"{self.belief.render_for_prompt(ws.turn)}\n"
+            f"{feedback_block}"
             f"\n"
             f"{unread_line}\n"
             f"\n"
@@ -268,6 +277,11 @@ class DungeonAgent:
             self.belief.update_from_tool_result(ws.turn, tool_name, tool_input, result)
         tool_latency_ms = int((time.perf_counter() - tool_t0) * 1000)
 
+        semantic_success = is_semantic_success(tool_name or "", result)
+        self.last_action_feedback = _format_last_action_feedback(
+            tool_name, tool_input, result, semantic_success, self.belief.position
+        )
+
         usage = getattr(response, "usage", None)
         return {
             "agent_id": self.agent_id,
@@ -280,7 +294,7 @@ class DungeonAgent:
             "tool_name": tool_name,
             "tool_input": tool_input,
             "tool_result": result,
-            "semantic_success": is_semantic_success(tool_name or "", result),
+            "semantic_success": semantic_success,
             "belief_snapshot": self.belief.snapshot(),
             "llm_latency_ms": llm_latency_ms,
             "tool_latency_ms": tool_latency_ms,
@@ -289,3 +303,52 @@ class DungeonAgent:
                 "output_tokens": getattr(usage, "output_tokens", None),
             } if usage else None,
         }
+
+
+def _format_last_action_feedback(
+    tool_name: Optional[str],
+    tool_input: dict,
+    result: dict,
+    semantic_success: bool,
+    current_pos: Pos,
+) -> Optional[str]:
+    """Compact one-line feedback to thread into the next turn's prompt.
+
+    Only emitted on failure. Successes are already reflected in the updated
+    belief snapshot, so echoing them back would just waste tokens.
+    """
+    if semantic_success:
+        return None
+    if tool_name is None:
+        reason = result.get("reason") or "no tool call produced"
+        return f"Last action: (no tool call) -> FAILED: {reason}"
+
+    if tool_name == "move":
+        direction = tool_input.get("direction", "?")
+        blocked_by = result.get("blocked_by") or "unknown"
+        target = None
+        if direction in DIRECTION_DELTAS:
+            dx, dy = DIRECTION_DELTAS[direction]
+            target = (current_pos[0] + dx, current_pos[1] + dy)
+        target_str = f" at ({target[0]}, {target[1]})" if target is not None else ""
+        return (
+            f"Last action: move(direction='{direction}') -> FAILED: "
+            f"blocked by {blocked_by}{target_str}. Try a different direction."
+        )
+
+    if tool_name == "pick_up":
+        item = tool_input.get("item", "?")
+        reason = result.get("reason") or "no reason given"
+        return f"Last action: pick_up(item='{item}') -> FAILED: {reason}"
+
+    if tool_name == "use_item":
+        item = tool_input.get("item", "?")
+        target = tool_input.get("target", "?")
+        reason = result.get("reason") or "no reason given"
+        return (
+            f"Last action: use_item(item='{item}', target='{target}') "
+            f"-> FAILED: {reason}"
+        )
+
+    reason = result.get("reason") or result.get("note") or "unknown failure"
+    return f"Last action: {tool_name}(...) -> FAILED: {reason}"

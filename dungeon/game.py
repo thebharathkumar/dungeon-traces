@@ -170,18 +170,21 @@ def run_game(
                 if record.get("semantic_success"):
                     ws.stuck_counter[aid] = 0
                 else:
-                    # Only count failed moves into cells the agent had already
-                    # seen. Bumping into a wall the agent could not possibly
-                    # have known about is exploration, not being stuck, and the
-                    # Phase 2 classifier labels it environment_constraint for
-                    # exactly that reason. Still catches the pathological case
-                    # where an agent retries the same failed direction, since
-                    # after the first failure the target cell IS in
-                    # seen_cells (visible via the 3x3 window).
+                    # Count failed moves where the agent should have known
+                    # better: the target is either a cell it has already seen
+                    # (so it observed the wall) or it is out of bounds (and
+                    # the grid edge is a hard knowable boundary the first
+                    # time the agent stands on it). Failed moves into unseen
+                    # in-bounds cells are legitimate exploration and do not
+                    # count, matching the environment_constraint category
+                    # the Phase 2 classifier uses.
                     target = _move_target(
                         ws.agent_positions[aid], record.get("tool_input") or {}
                     )
-                    if target is not None and target in agent.belief.seen_cells:
+                    if target is not None and (
+                        target in agent.belief.seen_cells
+                        or not ws.in_bounds(target)
+                    ):
                         ws.stuck_counter[aid] += 1
 
             ws.agents_at_exit = {

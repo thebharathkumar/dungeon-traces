@@ -21,8 +21,9 @@ from typing import Any, Optional, Protocol
 
 from .agent import DungeonAgent
 from .events import EventLogger
+from .tools import DIRECTION_DELTAS
 from .tracing import MultiSink
-from .world import DEFAULT_TURN_LIMIT, STUCK_THRESHOLD, Message, WorldState, generate_world
+from .world import DEFAULT_TURN_LIMIT, STUCK_THRESHOLD, Message, Pos, WorldState, generate_world
 
 
 class StepLogger(Protocol):
@@ -65,6 +66,14 @@ class ConsoleLogger:
 
 def _fmt_args(args: dict) -> str:
     return ", ".join(f"{k}={v!r}" for k, v in args.items())
+
+
+def _move_target(pos: Pos, tool_input: dict) -> Optional[Pos]:
+    direction = tool_input.get("direction")
+    delta = DIRECTION_DELTAS.get(direction) if direction else None
+    if delta is None:
+        return None
+    return (pos[0] + delta[0], pos[1] + delta[1])
 
 
 def _serialize_message(m: Message) -> dict:
@@ -161,7 +170,19 @@ def run_game(
                 if record.get("semantic_success"):
                     ws.stuck_counter[aid] = 0
                 else:
-                    ws.stuck_counter[aid] += 1
+                    # Only count failed moves into cells the agent had already
+                    # seen. Bumping into a wall the agent could not possibly
+                    # have known about is exploration, not being stuck, and the
+                    # Phase 2 classifier labels it environment_constraint for
+                    # exactly that reason. Still catches the pathological case
+                    # where an agent retries the same failed direction, since
+                    # after the first failure the target cell IS in
+                    # seen_cells (visible via the 3x3 window).
+                    target = _move_target(
+                        ws.agent_positions[aid], record.get("tool_input") or {}
+                    )
+                    if target is not None and target in agent.belief.seen_cells:
+                        ws.stuck_counter[aid] += 1
 
             ws.agents_at_exit = {
                 a for a, p in ws.agent_positions.items() if p == ws.exit_position

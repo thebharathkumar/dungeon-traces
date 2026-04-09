@@ -129,17 +129,23 @@ def tool_move(ws: WorldState, agent_id: str, direction: str) -> dict:
 
     if blocked_reason is not None:
         # Silent failure on purpose: the tool succeeds, the move does not.
+        # blocked_by is included so the Phase 2 classifier can tell a wall
+        # collision apart from a locked-door or other-agent collision. The
+        # LLM never sees this dict because we do not send tool_result back
+        # into the model conversation.
         return {
             "ok": True,
             "moved": False,
             "position": list(cur),
             "visible": ws.visible_cells(cur),
             "note": "you didn't move",
+            "blocked_by": blocked_reason,
         }
 
     ws.agent_positions[agent_id] = new_pos
     if new_pos == ws.exit_position:
         ws.agents_at_exit.add(agent_id)
+    ws.record_provenance(f"agent_{agent_id}_position", agent_id, "moved")
     return {
         "ok": True,
         "moved": True,
@@ -166,6 +172,7 @@ def tool_pick_up(ws: WorldState, agent_id: str, item: str) -> dict:
             inv.add("key")
             ws.key_position = None
             ws.key_holder = agent_id
+            ws.record_provenance("key_position", agent_id, "picked_up")
             return {
                 "ok": True,
                 "success": True,
@@ -201,6 +208,7 @@ def tool_use_item(ws: WorldState, agent_id: str, item: str, target: str) -> dict
         if not ws.door_locked:
             return {"ok": True, "success": False, "reason": "door is already unlocked"}
         ws.door_locked = False
+        ws.record_provenance("door_locked", agent_id, "unlocked")
         return {"ok": True, "success": True, "note": "door unlocked"}
     return {"ok": True, "success": False, "reason": f"cannot use {item} on {target}"}
 

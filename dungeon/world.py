@@ -52,6 +52,11 @@ class WorldState:
     turn: int = 0
     status: str = "running"
     stuck_counter: dict[str, int] = field(default_factory=dict)
+    # fact_key -> {"agent": str, "turn": int, "change": str}
+    # Written whenever a tool mutates a fact the classifier cares about.
+    # The Phase 2 classifier uses this to distinguish coordination_failure
+    # (change caused by the other agent) from information_lag.
+    provenance: dict[str, dict] = field(default_factory=dict)
 
     def in_bounds(self, pos: Pos) -> bool:
         x, y = pos
@@ -120,6 +125,13 @@ class WorldState:
             "exit_position": list(self.exit_position),
             "agents_at_exit": sorted(self.agents_at_exit),
             "status": self.status,
+        }
+
+    def record_provenance(self, field_key: str, agent_id: str, change: str) -> None:
+        self.provenance[field_key] = {
+            "agent": agent_id,
+            "turn": self.turn,
+            "change": change,
         }
 
 

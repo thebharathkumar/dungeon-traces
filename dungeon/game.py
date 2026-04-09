@@ -5,15 +5,23 @@ same turn number in strict A-then-B order. Messages sent on turn N are
 delivered at the START of turn N+1, before either agent acts. This matches
 the spec's "delivered on the following turn, not instantly" rule and means
 the delay is experienced even if B acts directly after A on the same turn N.
+
+Phase 2 note: the loop takes pre-action snapshots of belief and world
+truth, then feeds them plus the tool execution record into the event
+logger. This is the only point where decision-time state is captured;
+doing it anywhere else would let it drift with the mutations the tool
+itself performs.
 """
 
 from __future__ import annotations
 
+import copy
 from dataclasses import dataclass
 from typing import Any, Optional, Protocol
 
 from .agent import DungeonAgent
-from .world import DEFAULT_TURN_LIMIT, STUCK_THRESHOLD, WorldState, generate_world
+from .events import EventLogger
+from .world import DEFAULT_TURN_LIMIT, STUCK_THRESHOLD, Message, WorldState, generate_world
 
 
 class StepLogger(Protocol):
@@ -23,11 +31,7 @@ class StepLogger(Protocol):
 
 @dataclass
 class ConsoleLogger:
-    """Minimal stdout printer used during Phase 1 development.
-
-    Phase 2 will introduce a richer event logger and keep this one around
-    for human-readable local debugging.
-    """
+    """Minimal stdout printer for human-readable local debugging."""
 
     quiet: bool = False
 
@@ -62,6 +66,16 @@ def _fmt_args(args: dict) -> str:
     return ", ".join(f"{k}={v!r}" for k, v in args.items())
 
 
+def _serialize_message(m: Message) -> dict:
+    return {
+        "sender": m.sender,
+        "recipient": m.recipient,
+        "content": m.content,
+        "sent_turn": m.sent_turn,
+        "deliver_turn": m.deliver_turn,
+    }
+
+
 def deliver_messages(ws: WorldState) -> None:
     """Move any pending messages whose deliver_turn has arrived into inboxes."""
     still_pending = []
@@ -94,8 +108,10 @@ def run_game(
     seed: int,
     client: Any,
     model: str,
+    run_id: str,
     turn_limit: int = DEFAULT_TURN_LIMIT,
-    logger: Optional[StepLogger] = None,
+    console_logger: Optional[StepLogger] = None,
+    event_logger: Optional[EventLogger] = None,
     agent_ids: Optional[list[str]] = None,
 ) -> WorldState:
     agent_ids = agent_ids or ["A", "B"]
@@ -113,23 +129,46 @@ def run_game(
 
         for aid in agent_ids:
             agent = agents[aid]
+
+            # Snapshot decision-time state BEFORE the tool mutates anything.
+            belief_before = agent.belief.snapshot()
+            truth_before = ws.ground_truth_snapshot()
+            provenance_before = copy.deepcopy(ws.provenance)
+            received_preview = [_serialize_message(m) for m in ws.inboxes[aid]]
+            pending_before = len(ws.pending_messages)
+
             record = agent.take_turn(ws)
 
-            # Stuck counter: consecutive failed moves only. Any successful
-            # move resets it. Other tools leave it alone.
+            sent_this_turn = [
+                _serialize_message(m) for m in ws.pending_messages[pending_before:]
+            ]
+            unread_after = len(ws.inboxes[aid])
+
             if record.get("tool_name") == "move":
                 if record.get("semantic_success"):
                     ws.stuck_counter[aid] = 0
                 else:
                     ws.stuck_counter[aid] += 1
 
-            # Recompute the "currently at exit" set from ground truth.
             ws.agents_at_exit = {
                 a for a, p in ws.agent_positions.items() if p == ws.exit_position
             }
 
-            if logger is not None:
-                logger.log_step(ws, agent, record)
+            if event_logger is not None:
+                event_logger.log_step(
+                    agent_id=aid,
+                    turn=ws.turn,
+                    belief_snapshot=belief_before,
+                    truth_snapshot=truth_before,
+                    provenance=provenance_before,
+                    record=record,
+                    received_messages=received_preview,
+                    sent_messages=sent_this_turn,
+                    unread_inbox_count=unread_after,
+                )
+
+            if console_logger is not None:
+                console_logger.log_step(ws, agent, record)
 
             if _check_end(ws, turn_limit):
                 break
@@ -138,6 +177,6 @@ def run_game(
             break
         ws.turn += 1
 
-    if logger is not None:
-        logger.log_end(ws)
+    if console_logger is not None:
+        console_logger.log_end(ws)
     return ws

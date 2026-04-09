@@ -121,7 +121,12 @@ class BeliefState:
                 self.inbox_history.append(m)
 
     def snapshot(self) -> dict:
-        """Flat, JSON-ready belief snapshot for event logging."""
+        """Flat, JSON-ready belief snapshot for event logging.
+
+        seen_cell_positions is included as a list so the classifier (and
+        Phase 3 viewer) can tell "the agent had observed this cell before"
+        without needing the full BeliefState object.
+        """
         return {
             "self_id": self.self_id,
             "position": list(self.position),
@@ -131,6 +136,7 @@ class BeliefState:
             "last_known_other_position": _jsonify(self.last_known_other_position),
             "facts_last_seen": dict(self.facts_last_seen),
             "seen_cell_count": len(self.seen_cells),
+            "seen_cell_positions": sorted([list(p) for p in self.seen_cells.keys()]),
         }
 
     def render_for_prompt(self, turn: int) -> str:

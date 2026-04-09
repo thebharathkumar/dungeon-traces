@@ -3,6 +3,10 @@
 Usage:
     python -m dungeon.main --seed 42
     python -m dungeon.main --seed 7 --turn-limit 30 --quiet
+
+Artifacts produced per run, under ./runs/:
+    events_{run_id}.ndjson   structured event log (one line per agent step)
+    summary_{run_id}.json    run-level summary (outcome, counts, final state)
 """
 
 from __future__ import annotations
@@ -11,9 +15,15 @@ import argparse
 import os
 import sys
 import time
+from datetime import datetime, timezone
 
+from .events import EventLogger
 from .game import ConsoleLogger, run_game
 from .world import render_ascii
+
+
+def _make_run_id() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
 def main() -> int:
@@ -39,6 +49,8 @@ def main() -> int:
     )
     parser.add_argument("--turn-limit", type=int, default=60)
     parser.add_argument("--quiet", action="store_true", help="suppress per-turn output")
+    parser.add_argument("--out-dir", default="runs", help="output directory for event and summary files")
+    parser.add_argument("--run-id", default=None, help="override the generated run id")
     args = parser.parse_args()
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
@@ -46,18 +58,43 @@ def main() -> int:
         return 2
 
     seed = args.seed if args.seed is not None else int(time.time())
-    print(f"Starting run: seed={seed} model={args.model} turn_limit={args.turn_limit}")
+    run_id = args.run_id or _make_run_id()
+    print(f"Starting run {run_id}: seed={seed} model={args.model} turn_limit={args.turn_limit}")
 
     client = Anthropic()
-    logger = ConsoleLogger(quiet=args.quiet)
+    console_logger = ConsoleLogger(quiet=args.quiet)
+    event_logger = EventLogger(run_id=run_id, out_dir=args.out_dir)
 
-    ws = run_game(
-        seed=seed,
-        client=client,
-        model=args.model,
-        turn_limit=args.turn_limit,
-        logger=logger,
-    )
+    try:
+        ws = run_game(
+            seed=seed,
+            client=client,
+            model=args.model,
+            run_id=run_id,
+            turn_limit=args.turn_limit,
+            console_logger=console_logger,
+            event_logger=event_logger,
+        )
+    finally:
+        summary = {
+            "run_id": run_id,
+            "seed": seed,
+            "model": args.model,
+            "turn_limit": args.turn_limit,
+            "status": event_logger.events_in_memory[-1]["world_truth_state"]["status"]
+            if event_logger.events_in_memory
+            else "unknown",
+            "turns_played": event_logger.events_in_memory[-1]["turn"]
+            if event_logger.events_in_memory
+            else 0,
+            "total_events": event_logger.event_count,
+            "classification_counts": dict(event_logger.classification_counts),
+            "events_path": str(event_logger.path),
+        }
+        summary_path = event_logger.write_run_summary(summary)
+        event_logger.close()
+        print(f"\nWrote events to {event_logger.path}")
+        print(f"Wrote summary to {summary_path}")
 
     print()
     print("Final map:")

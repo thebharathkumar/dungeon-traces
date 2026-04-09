@@ -8,3 +8,8 @@ venv/
 .DS_Store
 *.egg-info/
 .pytest_cache/
+
+# Smoke test artifacts are regenerated on every run. Real Phase 4 runs
+# are force-added explicitly so the submission includes them.
+runs/*smoke*
+runs/*.tmp

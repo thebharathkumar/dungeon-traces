@@ -30,7 +30,14 @@ from dungeon.tracing import build_default_tracer  # noqa: E402
 from dungeon.world import render_ascii  # noqa: E402
 
 SEEDS = [7, 42, 101, 2027]
-MODEL = "claude-haiku-4-5-20251001"
+# Haiku 4.5 was too cautious in Phase 4 pilots: it would call observe
+# every turn and never commit to exploring, which starved the trace
+# layer of the stale-belief failures it is built to diagnose. Sonnet 4.5
+# is willing to move and to plan multiple turns ahead, which produces
+# the coordination and information-lag failures we actually want to
+# demonstrate. dungeon/main.py keeps haiku as its default for cheap
+# single runs; this batch intentionally uses the stronger model.
+MODEL = "claude-sonnet-4-5"
 TURN_LIMIT = 60
 OUT_DIR = Path("runs/phase4")
 

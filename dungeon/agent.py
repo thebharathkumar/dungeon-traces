@@ -231,13 +231,25 @@ class DungeonAgent:
         reasoning = ""
         tool_name: Optional[str] = None
         tool_input: dict = {}
+        serialized_blocks: list[dict] = []
         for block in response.content:
             btype = getattr(block, "type", None)
             if btype == "text":
                 reasoning += block.text
-            elif btype == "tool_use" and tool_name is None:
-                tool_name = block.name
-                tool_input = dict(block.input)
+                serialized_blocks.append({"type": "text", "text": block.text})
+            elif btype == "tool_use":
+                block_input = dict(block.input)
+                serialized_blocks.append(
+                    {
+                        "type": "tool_use",
+                        "id": getattr(block, "id", None),
+                        "name": block.name,
+                        "input": block_input,
+                    }
+                )
+                if tool_name is None:
+                    tool_name = block.name
+                    tool_input = block_input
 
         tool_t0 = time.perf_counter()
         if tool_name is None:
@@ -255,9 +267,11 @@ class DungeonAgent:
         return {
             "agent_id": self.agent_id,
             "turn": ws.turn,
+            "model": self.model,
             "system_prompt": self.system_prompt,
             "user_prompt": user_prompt,
             "reasoning": reasoning.strip(),
+            "response_content_blocks": serialized_blocks,
             "tool_name": tool_name,
             "tool_input": tool_input,
             "tool_result": result,

@@ -21,6 +21,7 @@ from typing import Any, Optional, Protocol
 
 from .agent import DungeonAgent
 from .events import EventLogger
+from .tracing import MultiSink
 from .world import DEFAULT_TURN_LIMIT, STUCK_THRESHOLD, Message, WorldState, generate_world
 
 
@@ -112,6 +113,7 @@ def run_game(
     turn_limit: int = DEFAULT_TURN_LIMIT,
     console_logger: Optional[StepLogger] = None,
     event_logger: Optional[EventLogger] = None,
+    tracer: Optional[MultiSink] = None,
     agent_ids: Optional[list[str]] = None,
 ) -> WorldState:
     agent_ids = agent_ids or ["A", "B"]
@@ -120,6 +122,17 @@ def run_game(
         aid: DungeonAgent(aid, client, model, ws.agent_positions[aid])
         for aid in agent_ids
     }
+    if tracer is not None:
+        tracer.start_run(
+            run_id=run_id,
+            seed=seed,
+            model=model,
+            metadata={
+                "turn_limit": turn_limit,
+                "agent_ids": agent_ids,
+                "initial_positions": {aid: list(p) for aid, p in ws.agent_positions.items()},
+            },
+        )
 
     while True:
         if _check_end(ws, turn_limit):
@@ -154,8 +167,9 @@ def run_game(
                 a for a, p in ws.agent_positions.items() if p == ws.exit_position
             }
 
+            event = None
             if event_logger is not None:
-                event_logger.log_step(
+                event = event_logger.log_step(
                     agent_id=aid,
                     turn=ws.turn,
                     belief_snapshot=belief_before,
@@ -165,6 +179,31 @@ def run_game(
                     received_messages=received_preview,
                     sent_messages=sent_this_turn,
                     unread_inbox_count=unread_after,
+                )
+
+            if tracer is not None:
+                tracer.start_turn(turn=ws.turn, agent_id=aid)
+                tracer.log_llm_call(
+                    system=record.get("system_prompt") or "",
+                    user_prompt=record.get("user_prompt") or "",
+                    output_blocks=record.get("response_content_blocks") or [],
+                    usage=record.get("usage"),
+                    latency_ms=record.get("llm_latency_ms"),
+                    model=record.get("model") or model,
+                )
+                if record.get("tool_name"):
+                    tracer.log_tool_call(
+                        name=record["tool_name"],
+                        tool_input=record.get("tool_input") or {},
+                        output=record.get("tool_result") or {},
+                        latency_ms=record.get("tool_latency_ms"),
+                    )
+                tracer.end_turn(
+                    outcome={
+                        "semantic_success": record.get("semantic_success"),
+                        "failure_classification": event.failure_classification if event else None,
+                        "divergence_fields": event.divergence_fields if event else [],
+                    }
                 )
 
             if console_logger is not None:
@@ -179,4 +218,15 @@ def run_game(
 
     if console_logger is not None:
         console_logger.log_end(ws)
+    if tracer is not None:
+        tracer.end_run(
+            status=ws.status,
+            summary={
+                "turns_played": ws.turn,
+                "final_positions": {aid: list(p) for aid, p in ws.agent_positions.items()},
+                "final_inventories": {aid: sorted(inv) for aid, inv in ws.agent_inventories.items()},
+                "door_locked": ws.door_locked,
+                "key_holder": ws.key_holder,
+            },
+        )
     return ws

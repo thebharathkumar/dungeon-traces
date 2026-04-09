@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 
 from .events import EventLogger
 from .game import ConsoleLogger, run_game
+from .tracing import build_default_tracer
 from .world import render_ascii
 
 
@@ -64,6 +65,7 @@ def main() -> int:
     client = Anthropic()
     console_logger = ConsoleLogger(quiet=args.quiet)
     event_logger = EventLogger(run_id=run_id, out_dir=args.out_dir)
+    tracer = build_default_tracer(run_id=run_id, out_dir=args.out_dir)
 
     try:
         ws = run_game(
@@ -74,6 +76,7 @@ def main() -> int:
             turn_limit=args.turn_limit,
             console_logger=console_logger,
             event_logger=event_logger,
+            tracer=tracer,
         )
     finally:
         summary = {
@@ -93,8 +96,15 @@ def main() -> int:
         }
         summary_path = event_logger.write_run_summary(summary)
         event_logger.close()
+        trace_path = None
+        for sink in getattr(tracer, "sinks", []):
+            if hasattr(sink, "path") and sink.path is not None:
+                trace_path = sink.path
+                break
         print(f"\nWrote events to {event_logger.path}")
         print(f"Wrote summary to {summary_path}")
+        if trace_path:
+            print(f"Wrote trace  to {trace_path}")
 
     print()
     print("Final map:")

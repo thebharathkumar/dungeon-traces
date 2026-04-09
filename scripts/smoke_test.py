@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from dungeon.events import EventLogger  # noqa: E402
 from dungeon.game import ConsoleLogger, run_game  # noqa: E402
+from dungeon.tracing import JsonTraceSink, MultiSink  # noqa: E402
 from dungeon.world import render_ascii  # noqa: E402
 
 
@@ -107,6 +108,7 @@ def main() -> int:
     client = ScriptedClient(scripts)
     console_logger = ConsoleLogger()
     event_logger = EventLogger(run_id=run_id, out_dir=out_dir)
+    tracer = MultiSink(sinks=[JsonTraceSink(run_id=run_id, out_dir=out_dir)])
 
     ws = run_game(
         seed=42,
@@ -116,6 +118,7 @@ def main() -> int:
         turn_limit=20,
         console_logger=console_logger,
         event_logger=event_logger,
+        tracer=tracer,
     )
     summary = {
         "run_id": run_id,

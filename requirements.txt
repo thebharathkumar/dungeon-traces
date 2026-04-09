@@ -1,2 +1,6 @@
 anthropic>=0.39.0
 python-dotenv>=1.0.0
+# Langfuse is optional at runtime: the LangfuseSink is a no-op when the
+# package is missing or LANGFUSE_PUBLIC_KEY / LANGFUSE_SECRET_KEY are unset.
+# Pinned loosely because the SDK evolves quickly.
+langfuse>=2.0.0

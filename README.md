@@ -83,7 +83,16 @@ The viewer shows:
 
 ## Included runs
 
-The four runs under `runs/phase4/` are the reference dataset for this submission. Seeds and a one-line outcome summary for each are in [ANALYSIS.md](./ANALYSIS.md), which also walks through one interesting turn in each run.
+The four runs under `runs/phase4/` are the reference dataset for this submission. Model `claude-sonnet-4-5`, turn limit 60.
+
+| seed | final status | turns | events | headline incident |
+|-----:|:-------------|------:|-------:|:------------------|
+|    7 | stuck        |    15 |     31 | `agent_error` vs `environment_constraint` side-by-side on the same move tool |
+|   42 | stuck        |    12 |     25 | one `coordination_failure`: A walks into the cell B just moved to |
+|  101 | stuck        |    21 |     43 | the only successful `pick_up` in the batch (A collects the key on turn 3) |
+| 2027 | stuck        |    15 |     31 | 9 `agent_error` events on B demonstrating that even with last-action feedback, Sonnet sometimes retries known-blocked moves |
+
+Per-turn incident writeups are in [ANALYSIS.md](./ANALYSIS.md#run-by-run-incidents).
 
 ## Where the judgment calls live
 

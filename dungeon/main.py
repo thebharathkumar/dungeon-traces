@@ -67,6 +67,7 @@ def main() -> int:
     event_logger = EventLogger(run_id=run_id, out_dir=args.out_dir)
     tracer = build_default_tracer(run_id=run_id, out_dir=args.out_dir)
 
+    ws = None
     try:
         ws = run_game(
             seed=seed,
@@ -79,14 +80,14 @@ def main() -> int:
             tracer=tracer,
         )
     finally:
+        final_status = ws.status if ws is not None else "crashed"
+        agents_at_exit = ws.agents_at_exit if ws is not None else None
         summary = {
             "run_id": run_id,
             "seed": seed,
             "model": args.model,
             "turn_limit": args.turn_limit,
-            "status": event_logger.events_in_memory[-1]["world_truth_state"]["status"]
-            if event_logger.events_in_memory
-            else "unknown",
+            "status": final_status,
             "turns_played": event_logger.events_in_memory[-1]["turn"]
             if event_logger.events_in_memory
             else 0,
@@ -95,7 +96,7 @@ def main() -> int:
             "events_path": str(event_logger.path),
         }
         summary_path = event_logger.write_run_summary(summary)
-        event_logger.close()
+        event_logger.finalize(final_status, agents_at_exit)
         trace_path = None
         for sink in getattr(tracer, "sinks", []):
             if hasattr(sink, "path") and sink.path is not None:

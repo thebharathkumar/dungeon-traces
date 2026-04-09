@@ -129,7 +129,7 @@ def main() -> int:
         "classification_counts": dict(event_logger.classification_counts),
     }
     event_logger.write_run_summary(summary)
-    event_logger.close()
+    event_logger.finalize(ws.status, ws.agents_at_exit)
 
     print()
     print("Final map:")

@@ -403,6 +403,32 @@ class EventLogger:
             json.dump(summary, fh, indent=2, default=_json_default)
         return summary_path
 
+    def finalize(self, final_status: str, agents_at_exit: Optional[set] = None) -> None:
+        """Patch the last event's world status and rewrite the NDJSON.
+
+        Every row captures world_truth_state BEFORE its action, so even the
+        last row stores status='running'. The viewer (and anyone reading the
+        NDJSON standalone) needs to see the real final status without loading
+        a second file, so once the run is over we patch the last event in
+        memory and rewrite the file from events_in_memory.
+
+        This also fixes agents_at_exit on the last row for success runs, for
+        the same reason.
+        """
+        if self._fh and not self._fh.closed:
+            self._fh.close()
+        if not self.events_in_memory:
+            return
+        last = self.events_in_memory[-1]
+        truth = last.setdefault("world_truth_state", {})
+        truth["status"] = final_status
+        if agents_at_exit is not None:
+            truth["agents_at_exit"] = sorted(agents_at_exit)
+        with open(self.path, "w", encoding="utf-8") as fh:
+            for payload in self.events_in_memory:
+                fh.write(json.dumps(payload, default=_json_default))
+                fh.write("\n")
+
     def close(self) -> None:
         if self._fh and not self._fh.closed:
             self._fh.close()

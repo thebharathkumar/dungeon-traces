@@ -36,7 +36,13 @@ The project produces three trace artifacts per run:
 2. **`trace_{run_id}.json`**: structured per-turn record with full system prompt, user prompt, response content blocks, and usage. This is where a reviewer or a replay tool goes when they need to see exactly what the model saw.
 3. **Langfuse** (optional): if `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY` are set in the environment, each run also produces a Langfuse trace with nested spans for every agent turn and nested generations for every LLM call. The sink auto-disables when the keys are missing and exceptions are swallowed per-call, so an observability outage can never take down a run.
 
-The NDJSON schema deliberately answers the five questions the spec asks a trace to answer:
+## Event Schema Decisions
+
+The authoritative schema lives in `dungeon/events.py:286` (the `EventLog.log_step` docstring plus the row-emit call site). A few decisions are worth calling out explicitly because they shape what a reviewer can and cannot see:
+
+**Prompts are deliberately excluded from the NDJSON.** A typical prompt is 2 KB, 120 prompts per run is 240 KB per run of repeated context that would bury the signal a reviewer is trying to find. Prompts live in `trace_{run_id}.json` instead, so a reviewer who needs to see exactly what the model saw has a separate file to open, and the NDJSON stays scannable.
+
+**The NDJSON answers the five questions the spec asks a trace to answer:**
 
 1. **What did the agent believe at the time of the decision?** → `agent_belief_state`.
 2. **What was actually true in the world?** → `world_truth_state`.
@@ -44,7 +50,9 @@ The NDJSON schema deliberately answers the five questions the spec asks a trace 
 4. **What was the agent trying to do, and did it succeed?** → `action_taken`, `action_result`, `action_succeeded`, `reasoning`.
 5. **If it failed, was it an agent error or an information problem?** → `failure_classification`.
 
-Everything else in the schema (`latency_ms`, `message_context`, `usage`) is secondary context.
+Everything else in the schema (`latency_ms`, `message_context`, `usage`) is secondary context: useful for aggregate analysis, not required for per-event diagnosis.
+
+**The `divergences` list carries causality, not just state.** Each entry records `caused_by_agent` and `caused_at_turn` so the viewer can say "A's belief about B's position went stale because B moved on turn 4", not just "A's belief was wrong". This is the field that lets the classifier distinguish `coordination_failure` from `information_lag` without any extra joins, and it is the data the viewer reads to render the `caused by {agent} on turn {N}` line in the detail panel.
 
 ### The four failure categories
 

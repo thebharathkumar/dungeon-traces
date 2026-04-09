@@ -168,6 +168,195 @@
     }
 
     .heatmap-panel .panel-body { padding: 14px; }
+
+    /* ----- Timeline ----- */
+    .timeline-body { max-height: 640px; overflow-y: auto; outline: none; }
+    .row {
+      display: grid;
+      grid-template-columns: 40px 28px 1fr 14px;
+      align-items: center;
+      gap: 10px;
+      height: 22px;
+      padding: 0 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+      color: var(--text);
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+    .row:hover { background: rgba(255,255,255,0.02); }
+    .row .turn { color: var(--text-mute); }
+    .row .agent {
+      font-weight: 700;
+      text-align: center;
+    }
+    .row .agent.A { color: var(--blue); }
+    .row .agent.B { color: var(--violet); }
+    .row .action {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text);
+    }
+    .row .action .tool { color: var(--text); }
+    .row .action .args { color: var(--text-mute); }
+    .row .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-mute);
+      justify-self: end;
+    }
+    .row .dot.match     { background: var(--green); }
+    .row .dot.diverged  { background: var(--red); }
+    .row .dot.stale     { background: var(--amber); }
+    .row .dot.unknown   { background: var(--text-mute); }
+
+    .row.cls-agent_error          { background: rgba(248,113,113,0.08); border-left-color: var(--red); }
+    .row.cls-information_lag      { background: rgba(245,165,36,0.09); border-left-color: var(--amber); }
+    .row.cls-coordination_failure { background: rgba(167,139,250,0.10); border-left-color: var(--violet); }
+    .row.cls-environment_constraint { background: rgba(96,165,250,0.08); border-left-color: var(--blue); }
+
+    .row.selected {
+      background: #1c2230 !important;
+      border-left-color: var(--text) !important;
+    }
+
+    /* ----- Detail panel ----- */
+    .detail-section { margin-bottom: 18px; }
+    .detail-section:last-child { margin-bottom: 0; }
+    .detail-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-mute);
+      margin-bottom: 6px;
+    }
+    .detail-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+    .detail-meta .agent-tag {
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 3px;
+      background: var(--bg-sunken);
+    }
+    .detail-meta .agent-tag.A { color: var(--blue); }
+    .detail-meta .agent-tag.B { color: var(--violet); }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .pill.success             { background: rgba(74,222,128,0.15); color: var(--green); }
+    .pill.agent_error         { background: rgba(248,113,113,0.15); color: var(--red); }
+    .pill.information_lag     { background: rgba(245,165,36,0.15); color: var(--amber); }
+    .pill.coordination_failure { background: rgba(167,139,250,0.15); color: var(--violet); }
+    .pill.environment_constraint { background: rgba(96,165,250,0.15); color: var(--blue); }
+
+    .bvt-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .bvt-table th, .bvt-table td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .bvt-table th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-mute);
+      font-weight: 500;
+    }
+    .bvt-table tr.fact-diverged td {
+      background: rgba(245,165,36,0.06);
+    }
+    .bvt-table tr.fact-diverged td.field-name {
+      border-left: 3px solid var(--amber);
+      padding-left: 8px;
+    }
+    .bvt-table tr.fact-unknown td { color: var(--text-mute); }
+    .bvt-table td.actual-diverged { color: var(--red); }
+    .bvt-table .age { color: var(--text-mute); font-size: 10px; }
+    .bvt-table .caused-by {
+      display: block;
+      color: var(--violet);
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .reasoning {
+      font-family: var(--sans);
+      font-style: italic;
+      color: var(--text-dim);
+      line-height: 1.5;
+      padding: 10px 12px;
+      background: var(--bg-sunken);
+      border-left: 2px solid var(--border);
+      border-radius: 3px;
+      font-size: 12px;
+    }
+    .action-line {
+      font-family: var(--mono);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .action-line .tool { color: var(--text); font-weight: 600; }
+    .action-line .args { color: var(--text-dim); }
+    .action-line .outcome.ok { color: var(--green); }
+    .action-line .outcome.fail { color: var(--red); }
+
+    .raw-json {
+      background: var(--bg-sunken);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 280px;
+      overflow: auto;
+    }
+
+    .msg-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .msg-list li {
+      padding: 6px 10px;
+      background: var(--bg-sunken);
+      border-left: 2px solid var(--border);
+      border-radius: 3px;
+      margin-bottom: 4px;
+      color: var(--text-dim);
+    }
+    .msg-list li .who { color: var(--text); font-weight: 600; }
+    .msg-list li .when { color: var(--text-mute); }
   </style>
 </head>
 <body>
@@ -220,7 +409,14 @@
     const state = {
       events: [],
       filename: null,
+      selectedIndex: -1,
     };
+
+    const FACT_KEYS = [
+      { id: "key_position",        belief: "last_known_key_position",     label: "key_position" },
+      { id: "door_locked",         belief: "last_known_door_locked",      label: "door_locked" },
+      { id: "other_agent_position", belief: "last_known_other_position",  label: "other_agent_position" },
+    ];
 
     const CLASSIFICATIONS = [
       "success",
@@ -251,10 +447,12 @@
           const events = parseNdjson(String(reader.result || ""));
           state.events = events;
           state.filename = file.name;
+          state.selectedIndex = events.length > 0 ? 0 : -1;
           render();
         } catch (err) {
           state.events = [];
           state.filename = file.name + " (parse error)";
+          state.selectedIndex = -1;
           render();
           console.error(err);
           alert("Failed to parse NDJSON: " + err.message);
@@ -311,7 +509,8 @@
       const s = summarize(state.events);
       renderFacts(s);
       renderChips(s);
-      renderTimelinePlaceholder(s);
+      renderTimeline();
+      renderDetail();
       renderHeatmapPlaceholder(s);
     }
 
@@ -363,13 +562,283 @@
       el.chips.innerHTML = parts.join("");
     }
 
-    function renderTimelinePlaceholder(s) {
-      if (!s) {
+    // ------- Timeline rendering -------
+    function renderTimeline() {
+      if (state.events.length === 0) {
         el.timeline.innerHTML = '<div class="placeholder">Load an NDJSON file to see turns.</div>';
         return;
       }
-      el.timeline.innerHTML =
-        '<div class="placeholder">Loaded ' + s.total + ' events. Timeline renders in the next milestone.</div>';
+      const rows = state.events.map(function (e, i) {
+        const cls = e.failure_classification || "success";
+        const selected = i === state.selectedIndex ? " selected" : "";
+        const tool = (e.action_taken && e.action_taken.tool_name) || "(no tool)";
+        const args = formatArgs(e.action_taken && e.action_taken.tool_input);
+        const dotClass = overallDotClass(e);
+        const turn = e.turn != null ? String(e.turn).padStart(2, "0") : "--";
+        const aid = e.agent_id || "?";
+        return (
+          '<div class="row cls-' + cls + selected + '" data-index="' + i + '">' +
+            '<div class="turn">' + escapeHtml(turn) + "</div>" +
+            '<div class="agent ' + aid + '">' + escapeHtml(aid) + "</div>" +
+            '<div class="action"><span class="tool">' + escapeHtml(tool) + "</span>" +
+              (args ? '<span class="args">(' + escapeHtml(args) + ")</span>" : "") +
+            "</div>" +
+            '<div class="dot ' + dotClass + '"></div>' +
+          "</div>"
+        );
+      });
+      el.timeline.innerHTML = rows.join("");
+    }
+
+    function overallDotClass(e) {
+      const acc = e.belief_accuracy || {};
+      const vals = Object.keys(acc).map(function (k) { return acc[k]; });
+      if (vals.indexOf("diverged") >= 0) return "diverged";
+      if (vals.length === 0) return "unknown";
+      const allUnknown = vals.every(function (v) { return v === "unknown"; });
+      if (allUnknown) return "unknown";
+      return "match";
+    }
+
+    function formatArgs(input) {
+      if (!input || typeof input !== "object") return "";
+      const keys = Object.keys(input);
+      if (keys.length === 0) return "";
+      return keys.map(function (k) {
+        const v = input[k];
+        let s = typeof v === "string" ? v : JSON.stringify(v);
+        if (s && s.length > 30) s = s.slice(0, 27) + "...";
+        return k + "=" + s;
+      }).join(", ");
+    }
+
+    // Timeline click + keyboard selection.
+    el.timeline.addEventListener("click", function (e) {
+      const row = e.target.closest(".row");
+      if (!row) return;
+      const i = parseInt(row.getAttribute("data-index"), 10);
+      if (isNaN(i)) return;
+      selectIndex(i, false);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (state.events.length === 0) return;
+      const tag = (e.target && e.target.tagName) || "";
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if (e.key === "ArrowDown" || e.key === "j") {
+        e.preventDefault();
+        selectIndex(Math.min(state.events.length - 1, state.selectedIndex + 1), true);
+      } else if (e.key === "ArrowUp" || e.key === "k") {
+        e.preventDefault();
+        selectIndex(Math.max(0, state.selectedIndex - 1), true);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        selectIndex(0, true);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        selectIndex(state.events.length - 1, true);
+      }
+    });
+
+    function selectIndex(i, scroll) {
+      if (i < 0 || i >= state.events.length) return;
+      state.selectedIndex = i;
+      // Update timeline row selection in place to avoid re-rendering.
+      const rows = el.timeline.querySelectorAll(".row");
+      for (let r = 0; r < rows.length; r++) rows[r].classList.remove("selected");
+      const row = el.timeline.querySelector('.row[data-index="' + i + '"]');
+      if (row) {
+        row.classList.add("selected");
+        if (scroll) {
+          row.scrollIntoView({ block: "nearest" });
+        }
+      }
+      renderDetail();
+    }
+
+    // ------- Detail panel rendering -------
+    function renderDetail() {
+      if (state.selectedIndex < 0 || !state.events[state.selectedIndex]) {
+        el.detail.innerHTML = '<div class="placeholder">Select a turn on the left.</div>';
+        return;
+      }
+      const e = state.events[state.selectedIndex];
+      const cls = e.failure_classification || "success";
+      const tool = (e.action_taken && e.action_taken.tool_name) || "(no tool)";
+      const args = formatArgs(e.action_taken && e.action_taken.tool_input);
+      const aid = e.agent_id || "?";
+      const succeeded = !!e.action_succeeded;
+
+      const metaHtml =
+        '<div class="detail-meta">' +
+          '<span class="agent-tag ' + aid + '">Agent ' + escapeHtml(aid) + "</span>" +
+          '<span>turn ' + escapeHtml(String(e.turn)) + "</span>" +
+          '<span>lat ' + escapeHtml(String((e.latency_ms && e.latency_ms.total) || 0)) + "ms</span>" +
+          (e.usage ? '<span>tokens ' + (e.usage.input_tokens || 0) + " / " + (e.usage.output_tokens || 0) + "</span>" : "") +
+          "</div>";
+
+      const actionHtml =
+        '<div class="detail-section">' +
+          '<div class="detail-label">Action</div>' +
+          '<div class="action-line">' +
+            '<span class="tool">' + escapeHtml(tool) + "</span>" +
+            (args ? '<span class="args">(' + escapeHtml(args) + ")</span>" : '<span class="args">()</span>') +
+            '<span class="outcome ' + (succeeded ? "ok" : "fail") + '">' + (succeeded ? "ok" : "noop") + "</span>" +
+            '<span class="pill ' + cls + '">' + cls.replace(/_/g, " ") + "</span>" +
+          "</div>" +
+        "</div>";
+
+      const bvtHtml =
+        '<div class="detail-section">' +
+          '<div class="detail-label">Belief vs truth</div>' +
+          renderBvtTable(e) +
+        "</div>";
+
+      const reasoningHtml = e.reasoning
+        ? '<div class="detail-section">' +
+            '<div class="detail-label">Reasoning</div>' +
+            '<div class="reasoning">' + escapeHtml(e.reasoning) + "</div>" +
+          "</div>"
+        : "";
+
+      const msgHtml = renderMessagesBlock(e);
+
+      const rawHtml =
+        '<div class="detail-section">' +
+          '<div class="detail-label">Raw action_result</div>' +
+          '<div class="raw-json">' + escapeHtml(JSON.stringify(e.action_result || {}, null, 2)) + "</div>" +
+        "</div>";
+
+      el.detail.innerHTML = metaHtml + actionHtml + bvtHtml + reasoningHtml + msgHtml + rawHtml;
+    }
+
+    function renderBvtTable(e) {
+      const belief = e.agent_belief_state || {};
+      const truth = e.world_truth_state || {};
+      const accuracy = e.belief_accuracy || {};
+      const divergences = e.divergences || [];
+      const divByField = {};
+      divergences.forEach(function (d) { divByField[d.field] = d; });
+
+      const selfId = belief.self_id;
+      const otherId = findOtherAgent(selfId, truth);
+
+      const rows = FACT_KEYS.map(function (f) {
+        const state = accuracy[f.id] || "unknown";
+        const believed = belief[f.belief];
+        const actual = actualValueForFact(f.id, selfId, otherId, truth);
+        const d = divByField[f.id];
+        let rowClass = "";
+        if (state === "diverged") rowClass = "fact-diverged";
+        else if (state === "unknown") rowClass = "fact-unknown";
+
+        const believedStr = formatValue(believed);
+        const actualStr = formatValue(actual);
+        const ageTxt = d && d.divergence_age != null
+          ? '(stale ' + d.divergence_age + (d.divergence_age === 1 ? " turn" : " turns") + ")"
+          : "";
+        const causedBy = d && d.caused_by_agent && d.caused_by_agent !== selfId
+          ? '<span class="caused-by">caused by ' + escapeHtml(d.caused_by_agent) +
+            (d.caused_at_turn != null ? " on turn " + d.caused_at_turn : "") +
+            (d.caused_change ? " (" + escapeHtml(d.caused_change) + ")" : "") +
+            "</span>"
+          : "";
+        const actualCls = state === "diverged" ? "actual-diverged" : "";
+        return (
+          '<tr class="' + rowClass + '">' +
+            '<td class="field-name">' + escapeHtml(f.label) + "</td>" +
+            "<td>" + escapeHtml(believedStr) + "</td>" +
+            '<td class="' + actualCls + '">' + escapeHtml(actualStr) +
+              (ageTxt ? ' <span class="age">' + escapeHtml(ageTxt) + "</span>" : "") +
+              causedBy +
+            "</td>" +
+          "</tr>"
+        );
+      });
+
+      return (
+        '<table class="bvt-table">' +
+          "<thead><tr>" +
+            "<th>field</th>" +
+            "<th>believed</th>" +
+            "<th>actual</th>" +
+          "</tr></thead>" +
+          "<tbody>" + rows.join("") + "</tbody>" +
+        "</table>"
+      );
+    }
+
+    function findOtherAgent(selfId, truth) {
+      const positions = (truth && truth.agent_positions) || {};
+      const ids = Object.keys(positions);
+      for (let i = 0; i < ids.length; i++) {
+        if (ids[i] !== selfId) return ids[i];
+      }
+      return null;
+    }
+
+    function actualValueForFact(factId, selfId, otherId, truth) {
+      if (factId === "key_position") {
+        const holder = truth.key_holder;
+        if (holder === selfId) return "in_my_inventory";
+        if (holder != null) return "in_partner_inventory";
+        if (truth.key_position) return truth.key_position;
+        return "unknown";
+      }
+      if (factId === "door_locked") {
+        return truth.door_locked;
+      }
+      if (factId === "other_agent_position") {
+        if (otherId && truth.agent_positions && truth.agent_positions[otherId]) {
+          return truth.agent_positions[otherId];
+        }
+        return "unknown";
+      }
+      return "unknown";
+    }
+
+    function formatValue(v) {
+      if (v === true) return "true";
+      if (v === false) return "false";
+      if (v == null) return "unknown";
+      if (Array.isArray(v)) {
+        if (v.length === 2 && typeof v[0] === "number") return "(" + v[0] + ", " + v[1] + ")";
+        return JSON.stringify(v);
+      }
+      if (typeof v === "object") return JSON.stringify(v);
+      return String(v);
+    }
+
+    function renderMessagesBlock(e) {
+      const ctx = e.message_context || {};
+      const received = ctx.received_preview || [];
+      const sent = ctx.sent_this_turn || [];
+      if (received.length === 0 && sent.length === 0) return "";
+      const items = [];
+      received.forEach(function (m) {
+        items.push(
+          "<li>" +
+            '<span class="who">from ' + escapeHtml(m.sender || "?") + "</span> " +
+            '<span class="when">[sent turn ' + (m.sent_turn != null ? m.sent_turn : "?") + "]</span> " +
+            escapeHtml(m.content || "") +
+          "</li>"
+        );
+      });
+      sent.forEach(function (m) {
+        items.push(
+          "<li>" +
+            '<span class="who">to ' + escapeHtml(m.recipient || "?") + "</span> " +
+            '<span class="when">[delivers turn ' + (m.deliver_turn != null ? m.deliver_turn : "?") + "]</span> " +
+            escapeHtml(m.content || "") +
+          "</li>"
+        );
+      });
+      return (
+        '<div class="detail-section">' +
+          '<div class="detail-label">Messages</div>' +
+          '<ul class="msg-list">' + items.join("") + "</ul>" +
+        "</div>"
+      );
     }
 
     function renderHeatmapPlaceholder(s) {

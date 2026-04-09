@@ -2,8 +2,6 @@
 
 This document captures the judgment calls, trade-offs, and interesting incidents behind the included simulation runs. It is the writeup a reviewer should read alongside the code and the trace viewer.
 
-> Note: the run-by-run sections are stubbed while the live runs execute. They will be filled in once `runs/phase4/` contains real artifacts.
-
 ## Scope and deliberate cuts
 
 The time budget for this project was intentionally tight. The scoring weights put most of the value on trace quality, legibility, and taste, not on how impressive the simulation is. So the simulation was kept at exactly the minimum needed to produce interesting failure modes, and everything past that was cut.
@@ -73,23 +71,60 @@ The viewer is a single file (`viewer/index.html`, ~900 lines, vanilla JS and CSS
 
 ## Run-by-run incidents
 
-> These sections are written after the live runs in `runs/phase4/` complete. Each section picks one turn per run that best illustrates what the trace layer is surfacing and walks through it: the state, the action, the reasoning, and why the classifier labeled it the way it did.
+All four included runs are with `claude-sonnet-4-5` at `turn_limit=60`. Every one of them ended in the `stuck` status, which is itself the most interesting cross-run finding: Sonnet is meaningfully risk-averse about committing to exploration in a sparse-information environment, and will oscillate between two adjacent directions for many turns rather than reverse course. The `last_action_feedback` channel added to the prompt does unstick the worst pathology (repeating the same failed direction verbatim) but does not make Sonnet a great explorer, which is exactly the class of finding the trace layer is built to make visible. Per-event classification is where the interesting texture lives.
+
+Headline per seed:
+
+| seed | turns | events | success | agent_error | information_lag | coordination_failure | environment_constraint |
+|-----:|------:|-------:|--------:|------------:|----------------:|---------------------:|-----------------------:|
+|    7 |    15 |     31 |      11 |           5 |               0 |                    0 |                     15 |
+|   42 |    12 |     25 |      10 |           7 |               0 |                    1 |                      7 |
+|  101 |    21 |     43 |      20 |           4 |               0 |                    0 |                     19 |
+| 2027 |    15 |     31 |      15 |           9 |               0 |                    0 |                      7 |
 
 ### Run 1: seed 7
 
-_pending live run data_
+The simplest illustration of the `agent_error` vs `environment_constraint` split. Both agents alternate `north` and `east` through the run; the directions the classifier flags are different for each.
+
+- **Agent A, turn 5, `move(direction='north')`** at position (3, 2). Classifier: **`agent_error`**. The cell to the north is a wall, but A had already observed (3, 1) at turn 3 from the 3x3 window around (3, 2), so it was in `seen_cell_positions` (15 cells seen by turn 5) when the move was issued. A had no excuse. The classifier correctly attributes this to the agent, not the environment.
+- **Agent B, turn 5, `move(direction='north')`** from position (7, 0). Classifier: **`environment_constraint`**. The target (7, -1) is out of bounds and was never in `seen_cells`, so at the moment of decision the classifier treats this as "exploration into the unknown" and exonerates the agent. The stuck counter still counts OOB failures as a commit `1509f5b` correction, but the *failure classifier* is a separate concern: it is asking "should a reviewer blame this on the agent?", and the answer for an unvisited edge is still no.
+
+This is the distinction the whole diagnostic layer exists to make: the same tool call with the same `moved: false` result is two completely different failure modes depending on what the agent could have known.
 
 ### Run 2: seed 42
 
-_pending live run data_
+The only `coordination_failure` in the batch, and the most informative single event in the entire submission.
+
+- **Agent A, turn 5, `move(direction='north')`** from (6, 1), aiming at (6, 0). Classifier: **`coordination_failure`**.
+- A's belief state: `last_known_other_position: [5, 0]`, `facts_last_seen.other_position: 4`. That is, A last saw B on turn 4.
+- World truth at the moment of decision: B was at `[6, 0]`. B had moved from (5, 0) to (6, 0) on turn 4 (after A's turn-4 observation).
+- Tool result: `{moved: false, blocked_by: "other_agent"}`.
+- Divergence record on the event: `field: other_agent_position, believed: [5, 0], actual: [6, 0], divergence_age: 1, caused_by_agent: "B", caused_at_turn: 4, caused_change: "moved"`.
+
+This is the textbook case the classifier is built to catch: the move failed, the failing field (other agent's position) was relevant to the failure (the tool said `blocked_by: other_agent`), and the stale belief was caused by the *other* agent's action within the same turn. The Phase 3 viewer renders this as an amber row with `caused by B on turn 4` inline in the detail panel, which lets a reviewer understand "A did not do anything wrong here, it was acting on a sibling turn's worth of old information" in under five seconds.
+
+An interesting subtlety: A had no unread messages at this point (`inbox_at_decision_count: 0`). The coordination failure is not "A did not read its mail", it is "there is no mail to read because the simulation deliberately does not auto-broadcast state". Better communication between agents is the actual remediation this classification is pointing at.
 
 ### Run 3: seed 101
 
-_pending live run data_
+The longest run (21 turns, 43 events) and the only one in the batch where a pick_up actually succeeded.
+
+- **Agent A, turn 3, `pick_up(item='key')`** at (4, 4). Classifier: **success (no classification)**.
+- A's belief key position at decision time: `[4, 4]`. World truth key position: `[4, 4]`. Belief and truth matched exactly; the action was a straightforward confirmation.
+- Tool result: `{ok: true, success: true, picked_up: "key", inventory: ["key"]}`.
+- How A got there in the first place is worth tracing: turn 0 observe (seeing the key at (4, 4) from the 3x3 window since A spawned at (5, 3)), turn 1 `move east`, turn 2 `move south`, turn 3 `pick_up`. Three turns, clean execution.
+
+The reason this run is still interesting for diagnostic purposes is what happens *after* the pickup. A had the key but never reached the door, and B never joined up. Both agents drifted into the same north/east oscillation pattern seen in seed 7. The detail panel for turns 16 to 21 is a wall of alternating `agent_error` and `environment_constraint` classifications. A reviewer reading this run end-to-end in the viewer will see a clean success at turn 3 followed by a slow, visible collapse into mutual stuckness, which is the exact story this project is trying to surface: the failure was not a single bad decision but a long run of individually-reasonable-looking turns that never converged.
 
 ### Run 4: seed 2027
 
-_pending live run data_
+The `agent_error` heavy run. B hit agent-error classified failures on 9 of its 15 turns and accounts for most of the stuck counter pressure.
+
+- **Agent B, turn 5, `move(direction='north')`** from (2, 4). Classifier: **`agent_error`**.
+- Target (2, 3) was a wall, and B had been at (2, 4) on the previous turn where the 3x3 window included (2, 3). `seen_cell_positions` at decision time contained 15 cells including (2, 3). The last_action_feedback line in the prompt would have said `blocked by wall at (2, 3)` on the turn after the first failed attempt, yet B still retried variants of the same direction.
+- Reasoning field: *"I need to continue exploring to find the key and map out the dungeon."* No acknowledgement of the previous failure, despite it being in the user prompt.
+
+This turn is the single best evidence that Sonnet's belief-use is imperfect: the information was there, the feedback was there, and the model still chose a known-blocked action. The classifier is working correctly; the *agent* is the bug. For a reviewer asking "are the traces actually telling me what went wrong, or am I looking at a trace-layer artifact?", this is the incident to point at: the classifier categorically rules out information problems and puts the blame exactly where it belongs.
 
 ## Limitations and what I would do next
 

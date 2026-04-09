@@ -1,0 +1,3964 @@
+{
+  "run_id": "seed101",
+  "schema_version": "1",
+  "started_at": "2026-04-09T19:00:54.380633+00:00",
+  "turns": [
+    {
+      "turn": 0,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:00:55.648209+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 0\nYour id: A\nYour position: (3, 3)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 0\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'll start by observing my surroundings to see what's nearby."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01DohBBKTMRLYiXNJAY8rcVE",
+            "name": "observe",
+            "input": {}
+          }
+        ],
+        "usage": {
+          "input_tokens": 1275,
+          "output_tokens": 51
+        },
+        "latency_ms": 1266
+      },
+      "tool": {
+        "name": "observe",
+        "input": {},
+        "output": {
+          "ok": true,
+          "position": [
+            3,
+            3
+          ],
+          "inventory": [],
+          "visible": [
+            {
+              "x": 2,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 2,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 2,
+              "y": 4,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "type": "empty",
+              "contents": [
+                "key"
+              ]
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:00:55.648253+00:00"
+    },
+    {
+      "turn": 0,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:00:56.974489+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 0\nYour id: B\nYour position: (7, 1)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 0\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'll start by observing my surroundings to see what's around me."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_0114f8exDxiNYSz2c9M2nb8c",
+            "name": "observe",
+            "input": {}
+          }
+        ],
+        "usage": {
+          "input_tokens": 1275,
+          "output_tokens": 52
+        },
+        "latency_ms": 1325
+      },
+      "tool": {
+        "name": "observe",
+        "input": {},
+        "output": {
+          "ok": true,
+          "position": [
+            7,
+            1
+          ],
+          "inventory": [],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:00:56.974508+00:00"
+    },
+    {
+      "turn": 1,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:00:59.826032+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 1\nYour id: A\nYour position: (3, 3)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: [4, 4] (observed 1 turn ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 9\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to pick up the key at my adjacent position (4, 4)."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_015QhtyAQq52aufAiUyqMzMx",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1284,
+          "output_tokens": 69
+        },
+        "latency_ms": 2850
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            4,
+            3
+          ],
+          "visible": [
+            {
+              "x": 3,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "type": "empty",
+              "contents": [
+                "key"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:00:59.826051+00:00"
+    },
+    {
+      "turn": 1,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:01.160904+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 1\nYour id: B\nYour position: (7, 1)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 6\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'll start by observing my immediate surroundings to understand the local area."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01HbsKQCVGL59Twfc2R1NUsm",
+            "name": "observe",
+            "input": {}
+          }
+        ],
+        "usage": {
+          "input_tokens": 1275,
+          "output_tokens": 52
+        },
+        "latency_ms": 1334
+      },
+      "tool": {
+        "name": "observe",
+        "input": {},
+        "output": {
+          "ok": true,
+          "position": [
+            7,
+            1
+          ],
+          "inventory": [],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:01.160919+00:00"
+    },
+    {
+      "turn": 2,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:04.815389+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 2\nYour id: A\nYour position: (4, 3)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: [4, 4] (observed 1 turn ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 12\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to pick up the key that's adjacent to me at position (4, 4)."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01R6UwUFzKFYpQv6c9A6tWS3",
+            "name": "move",
+            "input": {
+              "direction": "south"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1284,
+          "output_tokens": 72
+        },
+        "latency_ms": 3653
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "south"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            4,
+            4
+          ],
+          "visible": [
+            {
+              "x": 3,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "type": "empty",
+              "contents": [
+                "key",
+                "agent:A"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 5,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 5,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 5,
+              "type": "wall",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:04.815407+00:00"
+    },
+    {
+      "turn": 2,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:06.276978+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 2\nYour id: B\nYour position: (7, 1)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 6\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to explore the dungeon to find the key and map out the area."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_0196vJ19cjKSvcQ2tYDq9MWJ",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1275,
+          "output_tokens": 69
+        },
+        "latency_ms": 1460
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:06.276998+00:00"
+    },
+    {
+      "turn": 3,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:09.454442+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 3\nYour id: A\nYour position: (4, 4)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: [4, 4] (observed 1 turn ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 15\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to pick up the key that's in my current cell."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01SjEJh7jfsJyTNWFxch2nMr",
+            "name": "pick_up",
+            "input": {
+              "item": "key"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1284,
+          "output_tokens": 68
+        },
+        "latency_ms": 3176
+      },
+      "tool": {
+        "name": "pick_up",
+        "input": {
+          "item": "key"
+        },
+        "output": {
+          "ok": true,
+          "success": true,
+          "picked_up": "key",
+          "inventory": [
+            "key"
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:09.454457+00:00"
+    },
+    {
+      "turn": 3,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:10.802146+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 3\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 6\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to start exploring to find the key and map out the dungeon."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01MztmsuJrT8phy2ZBJMYYEi",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1275,
+          "output_tokens": 68
+        },
+        "latency_ms": 1347
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:10.802165+00:00"
+    },
+    {
+      "turn": 4,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:13.776909+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 4\nYour id: A\nYour position: (4, 4)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 1 turn ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 15\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I need to explore to find the locked door."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01FJU7RkxPH7PGeTFXBBYjDt",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 68
+        },
+        "latency_ms": 2974
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            4,
+            3
+          ],
+          "visible": [
+            {
+              "x": 3,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:13.776930+00:00"
+    },
+    {
+      "turn": 4,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:15.286360+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 4\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 6\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (7, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'm at the edge, so I'll try moving in a different direction to explore."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_018oY1YJ4gKRG4uhgjpdVgrB",
+            "name": "move",
+            "input": {
+              "direction": "west"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 70
+        },
+        "latency_ms": 1508
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "west"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            6,
+            0
+          ],
+          "visible": [
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:15.286379+00:00"
+    },
+    {
+      "turn": 5,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:16.942882+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 5\nYour id: A\nYour position: (4, 3)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 2 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 15\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I need to find the locked door to unlock it."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_012JFV53pU7BFu3ehhxJ87m6",
+            "name": "observe",
+            "input": {}
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 52
+        },
+        "latency_ms": 1655
+      },
+      "tool": {
+        "name": "observe",
+        "input": {},
+        "output": {
+          "ok": true,
+          "position": [
+            4,
+            3
+          ],
+          "inventory": [
+            "key"
+          ],
+          "visible": [
+            {
+              "x": 3,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:16.942903+00:00"
+    },
+    {
+      "turn": 5,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:19.823404+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 5\nYour id: B\nYour position: (6, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to explore more of the dungeon to find the key or door."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01KjPuiZJnLjiWWFyVBG3YGk",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1275,
+          "output_tokens": 68
+        },
+        "latency_ms": 2879
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            6,
+            0
+          ],
+          "visible": [
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:19.823425+00:00"
+    },
+    {
+      "turn": 6,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:21.400645+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 6\nYour id: A\nYour position: (4, 3)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 3 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 15\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I need to find the locked door to unlock it."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_015hq4Wi7qFD2pCmbGHbFKMb",
+            "name": "observe",
+            "input": {}
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 52
+        },
+        "latency_ms": 1576
+      },
+      "tool": {
+        "name": "observe",
+        "input": {},
+        "output": {
+          "ok": true,
+          "position": [
+            4,
+            3
+          ],
+          "inventory": [
+            "key"
+          ],
+          "visible": [
+            {
+              "x": 3,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 4,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:21.400666+00:00"
+    },
+    {
+      "turn": 6,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:23.361067+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 6\nYour id: B\nYour position: (6, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (6, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to explore the dungeon by moving in a valid direction, let me try moving east."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_012wLCWx6pTjn2JFYPESGW1h",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 72
+        },
+        "latency_ms": 1959
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:23.361088+00:00"
+    },
+    {
+      "turn": 7,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:25.254092+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 7\nYour id: A\nYour position: (4, 3)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 4 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 15\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I need to find the door to unlock it."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01AUJFGXPSsFF4rSoT7VVqdp",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 68
+        },
+        "latency_ms": 1892
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            4,
+            2
+          ],
+          "visible": [
+            {
+              "x": 3,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:25.254111+00:00"
+    },
+    {
+      "turn": 7,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:26.885355+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 7\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to explore more of the dungeon to find the key or door."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01NBDoe9FnT34MMcsKpma6wG",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1275,
+          "output_tokens": 68
+        },
+        "latency_ms": 1630
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:26.885373+00:00"
+    },
+    {
+      "turn": 8,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:29.351073+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 8\nYour id: A\nYour position: (4, 2)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 5 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 18\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I need to find the locked door to unlock it."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_014pL1jgpfDg9araGawgPhGU",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 69
+        },
+        "latency_ms": 2465
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            4,
+            2
+          ],
+          "visible": [
+            {
+              "x": 3,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 3,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "wall"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "agent_error",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:29.351093+00:00"
+    },
+    {
+      "turn": 8,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:31.268489+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 8\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (7, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I hit the northern edge, so I'll move east to continue exploring."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_017kKToDoWXj86u4B1BFAnc8",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 67
+        },
+        "latency_ms": 1916
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:31.268511+00:00"
+    },
+    {
+      "turn": 9,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:33.625464+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 9\nYour id: A\nYour position: (4, 2)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 6 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 18\n\nLast action: move(direction='north') -> FAILED: blocked by wall at (4, 1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to explore towards the door and exit since I have the key."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_019MYm1GcinzKCqkVmTB1rAK",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1314,
+          "output_tokens": 67
+        },
+        "latency_ms": 2356
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            5,
+            2
+          ],
+          "visible": [
+            {
+              "x": 4,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:33.625482+00:00"
+    },
+    {
+      "turn": 9,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:35.727462+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 9\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nLast action: move(direction='east') -> FAILED: blocked by edge at (8, 0). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I hit the eastern edge, so I should explore in a different direction to find the key and map the dungeon."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_017F77cW18U11NeDzo6GKRJr",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 76
+        },
+        "latency_ms": 2101
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:35.727481+00:00"
+    },
+    {
+      "turn": 10,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:37.453125+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 10\nYour id: A\nYour position: (5, 2)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 7 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 21\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I should explore to find the locked door."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01XgVQUJzwJ1pZZvxHu6gTsD",
+            "name": "observe",
+            "input": {}
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 50
+        },
+        "latency_ms": 1724
+      },
+      "tool": {
+        "name": "observe",
+        "input": {},
+        "output": {
+          "ok": true,
+          "position": [
+            5,
+            2
+          ],
+          "inventory": [
+            "key"
+          ],
+          "visible": [
+            {
+              "x": 4,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:37.453153+00:00"
+    },
+    {
+      "turn": 10,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:40.171810+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 10\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (7, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'm at the edge, so I need to explore in a valid direction - let me try moving east."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_0164ht2Zbnz7rmoxnjNMCeCZ",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 74
+        },
+        "latency_ms": 2718
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:40.171832+00:00"
+    },
+    {
+      "turn": 11,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:42.119112+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 11\nYour id: A\nYour position: (5, 2)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 8 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 21\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I should explore to find the locked door."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01EKTKpUa43iNU8KGVE4oAri",
+            "name": "observe",
+            "input": {}
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 50
+        },
+        "latency_ms": 1946
+      },
+      "tool": {
+        "name": "observe",
+        "input": {},
+        "output": {
+          "ok": true,
+          "position": [
+            5,
+            2
+          ],
+          "inventory": [
+            "key"
+          ],
+          "visible": [
+            {
+              "x": 4,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:42.119128+00:00"
+    },
+    {
+      "turn": 11,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:44.175595+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 11\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nLast action: move(direction='east') -> FAILED: blocked by edge at (8, 0). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I hit the eastern edge, so I should explore in a different direction to find the key and map the dungeon."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_017CnRG58pZMZRGxgzbUP3Qh",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 76
+        },
+        "latency_ms": 2055
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:44.175612+00:00"
+    },
+    {
+      "turn": 12,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:46.009751+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 12\nYour id: A\nYour position: (5, 2)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 9 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 21\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I should search for the locked door to unlock it."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01VDsUuZQJvV4KT9kVXrhKVD",
+            "name": "observe",
+            "input": {}
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 52
+        },
+        "latency_ms": 1833
+      },
+      "tool": {
+        "name": "observe",
+        "input": {},
+        "output": {
+          "ok": true,
+          "position": [
+            5,
+            2
+          ],
+          "inventory": [
+            "key"
+          ],
+          "visible": [
+            {
+              "x": 4,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:46.009775+00:00"
+    },
+    {
+      "turn": 12,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:47.589489+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 12\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (7, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to explore by moving in a different direction since north is blocked."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01BwDr2wuyGXBszY4SkCkvxQ",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 67
+        },
+        "latency_ms": 1579
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:47.589509+00:00"
+    },
+    {
+      "turn": 13,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:49.328090+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 13\nYour id: A\nYour position: (5, 2)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 10 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 21\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I should explore to find the locked door."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01BwRN9eUZ2YmGE1LZvoqzq1",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 67
+        },
+        "latency_ms": 1737
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            5,
+            1
+          ],
+          "visible": [
+            {
+              "x": 4,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 2,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:49.328133+00:00"
+    },
+    {
+      "turn": 13,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:51.262360+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 13\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nLast action: move(direction='east') -> FAILED: blocked by edge at (8, 0). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'm at the eastern edge, so I should move north to explore new areas."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01BPdZ1yHMApFfb5Lx9yaWv9",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 69
+        },
+        "latency_ms": 1933
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:51.262377+00:00"
+    },
+    {
+      "turn": 14,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:53.956326+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 14\nYour id: A\nYour position: (5, 1)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 11 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 24\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key and need to find the locked door, so I'll continue exploring by moving north."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_019e8Ywm8HShTT2YkRe5Bk1Z",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 73
+        },
+        "latency_ms": 2693
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            5,
+            0
+          ],
+          "visible": [
+            {
+              "x": 4,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 4,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:53.956348+00:00"
+    },
+    {
+      "turn": 14,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:56.443420+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 14\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (7, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I hit the northern edge, so I should explore east to discover more of the dungeon."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01E3Yrv4F7ePPC1RN2GBwg2X",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 71
+        },
+        "latency_ms": 2486
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:56.443435+00:00"
+    },
+    {
+      "turn": 15,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:01:58.277608+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 15\nYour id: A\nYour position: (5, 0)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 12 turns ago)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 24\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key, so I should continue exploring to find the locked door."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01QzJbJwJyWo12n6kzexThJC",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1285,
+          "output_tokens": 68
+        },
+        "latency_ms": 1833
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": true,
+          "position": [
+            6,
+            0
+          ],
+          "visible": [
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ]
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": true,
+        "failure_classification": null,
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:58.277629+00:00"
+    },
+    {
+      "turn": 15,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:01:59.948836+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 15\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: unknown (never observed)\n\nCells you have seen so far: 8\n\nLast action: move(direction='east') -> FAILED: blocked by edge at (8, 0). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'm at the eastern edge, so I should move north to continue exploring."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01JRhL7BWyFcakwaJNCDXFgR",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1304,
+          "output_tokens": 68
+        },
+        "latency_ms": 1670
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:01:59.948857+00:00"
+    },
+    {
+      "turn": 16,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:02:01.964914+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 16\nYour id: A\nYour position: (6, 0)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 13 turns ago)\n  door locked: unknown (never observed)\n  partner position: [7, 0] (observed 1 turn ago)\n\nCells you have seen so far: 26\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I have the key and need to find the locked door, so I'll continue exploring by moving north."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01PPbqZbQxof1KNozdk722QR",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1294,
+          "output_tokens": 73
+        },
+        "latency_ms": 2015
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            6,
+            0
+          ],
+          "visible": [
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:01.964942+00:00"
+    },
+    {
+      "turn": 16,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:02:04.182437+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 16\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: [6, 0] (observed 1 turn ago)\n\nCells you have seen so far: 8\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (7, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'm at the edge and need to explore in a different direction, so I'll move east."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01FSZnk8MH1K7Fcm8PqvFKgQ",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1313,
+          "output_tokens": 72
+        },
+        "latency_ms": 2216
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:04.182454+00:00"
+    },
+    {
+      "turn": 17,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:02:05.938643+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 17\nYour id: A\nYour position: (6, 0)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 14 turns ago)\n  door locked: unknown (never observed)\n  partner position: [7, 0] (observed 1 turn ago)\n\nCells you have seen so far: 26\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (6, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to move east to find the door and exit since I have the key."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01Mw53FUfDFmipFQoR1WW2e5",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1323,
+          "output_tokens": 69
+        },
+        "latency_ms": 1755
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            6,
+            0
+          ],
+          "visible": [
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "other_agent"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "agent_error",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:05.938664+00:00"
+    },
+    {
+      "turn": 17,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:02:07.478535+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 17\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: [6, 0] (observed 1 turn ago)\n\nCells you have seen so far: 8\n\nLast action: move(direction='east') -> FAILED: blocked by edge at (8, 0). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'm at the eastern edge, so I should move north to explore new areas."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01KDkHrrn9WXLbT8MVDkehBr",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1313,
+          "output_tokens": 69
+        },
+        "latency_ms": 1539
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:07.478559+00:00"
+    },
+    {
+      "turn": 18,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:02:09.047377+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 18\nYour id: A\nYour position: (6, 0)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 15 turns ago)\n  door locked: unknown (never observed)\n  partner position: [7, 0] (observed 1 turn ago)\n\nCells you have seen so far: 26\n\nLast action: move(direction='east') -> FAILED: blocked by other_agent at (7, 0). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to move around my partner to continue toward the exit with the key."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01KNu4q3qxsQ22Gs88Ub1HHM",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1325,
+          "output_tokens": 68
+        },
+        "latency_ms": 1568
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            6,
+            0
+          ],
+          "visible": [
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:09.047397+00:00"
+    },
+    {
+      "turn": 18,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:02:10.979267+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 18\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: [6, 0] (observed 1 turn ago)\n\nCells you have seen so far: 8\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (7, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'm at the edge, so I need to explore in a different direction - let me try moving east."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01GT386v5dTXntgk4k2FAR15",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1313,
+          "output_tokens": 74
+        },
+        "latency_ms": 1931
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:10.979288+00:00"
+    },
+    {
+      "turn": 19,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:02:12.743846+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 19\nYour id: A\nYour position: (6, 0)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 16 turns ago)\n  door locked: unknown (never observed)\n  partner position: [7, 0] (observed 1 turn ago)\n\nCells you have seen so far: 26\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (6, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to move east to find the door and exit since I have the key."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01449DsZ9TaeoveJNWz17qKK",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1323,
+          "output_tokens": 69
+        },
+        "latency_ms": 1763
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            6,
+            0
+          ],
+          "visible": [
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "other_agent"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "agent_error",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:12.743865+00:00"
+    },
+    {
+      "turn": 19,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:02:15.362262+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 19\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: [6, 0] (observed 1 turn ago)\n\nCells you have seen so far: 8\n\nLast action: move(direction='east') -> FAILED: blocked by edge at (8, 0). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I hit the east edge, so I should move north to explore new areas."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01KG58jbZUMKcjsPk2hdyhqF",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1313,
+          "output_tokens": 68
+        },
+        "latency_ms": 2617
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:15.362283+00:00"
+    },
+    {
+      "turn": 20,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:02:17.695034+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 20\nYour id: A\nYour position: (6, 0)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 17 turns ago)\n  door locked: unknown (never observed)\n  partner position: [7, 0] (observed 1 turn ago)\n\nCells you have seen so far: 26\n\nLast action: move(direction='east') -> FAILED: blocked by other_agent at (7, 0). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I'm blocked by my partner, so I'll move in a different direction to get around them."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_018gDF2BY5GUKiptnESyt7g9",
+            "name": "move",
+            "input": {
+              "direction": "north"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1325,
+          "output_tokens": 72
+        },
+        "latency_ms": 2332
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "north"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            6,
+            0
+          ],
+          "visible": [
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:17.695054+00:00"
+    },
+    {
+      "turn": 20,
+      "agent_id": "B",
+      "started_at": "2026-04-09T19:02:21.879791+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are B, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 20\nYour id: B\nYour position: (7, 0)\nYour inventory: empty\n\nWhat you believe about the world (may be stale):\n  key: unknown (never observed)\n  door locked: unknown (never observed)\n  partner position: [6, 0] (observed 1 turn ago)\n\nCells you have seen so far: 8\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (7, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I hit the northern edge, so I should explore eastward to discover more of the map."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01PuhnaM9Qjdn53gg7XWQKnr",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1313,
+          "output_tokens": 71
+        },
+        "latency_ms": 4184
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            7,
+            0
+          ],
+          "visible": [
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "edge"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "environment_constraint",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:21.879811+00:00"
+    },
+    {
+      "turn": 21,
+      "agent_id": "A",
+      "started_at": "2026-04-09T19:02:24.261131+00:00",
+      "llm": {
+        "model": "claude-sonnet-4-5",
+        "system": "You are A, one of two agents exploring a dungeon. Your shared goal is for BOTH agents to reach the exit cell. One of you must find and pick up the key, then use_item(item='key', target='door') on the locked door. The door must be unlocked before anyone can step onto the exit.\n\nYou can only see the 3x3 cells around your current position. To explore, you MUST call move. The move tool returns the new 3x3 visibility automatically, so observe is only useful once at the start or after read_messages/pick_up/use_item. Do NOT call observe two turns in a row. When in doubt, call move in the direction of the nearest unknown area, the key, or the exit. Messages you send are delivered on the NEXT turn, not instantly, so the other agent may act on old information.\n\nThink in ONE short sentence, then call exactly one tool. Do not call multiple tools in a single turn.",
+        "user": "Current turn: 21\nYour id: A\nYour position: (6, 0)\nYour inventory: ['key']\n\nWhat you believe about the world (may be stale):\n  key: in_my_inventory (observed 18 turns ago)\n  door locked: unknown (never observed)\n  partner position: [7, 0] (observed 1 turn ago)\n\nCells you have seen so far: 26\n\nLast action: move(direction='north') -> FAILED: blocked by edge at (6, -1). Try a different direction.\n\nYou have no unread messages.\n\nThink in one short sentence, then call exactly one tool.",
+        "output_blocks": [
+          {
+            "type": "text",
+            "text": "I need to move east to find the door and exit since I have the key."
+          },
+          {
+            "type": "tool_use",
+            "id": "toolu_01RN6X6nET5ib4nXjPj2iHgN",
+            "name": "move",
+            "input": {
+              "direction": "east"
+            }
+          }
+        ],
+        "usage": {
+          "input_tokens": 1323,
+          "output_tokens": 69
+        },
+        "latency_ms": 2380
+      },
+      "tool": {
+        "name": "move",
+        "input": {
+          "direction": "east"
+        },
+        "output": {
+          "ok": true,
+          "moved": false,
+          "position": [
+            6,
+            0
+          ],
+          "visible": [
+            {
+              "x": 5,
+              "y": 0,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:A"
+              ]
+            },
+            {
+              "x": 7,
+              "y": 0,
+              "type": "empty",
+              "contents": [
+                "agent:B"
+              ]
+            },
+            {
+              "x": 5,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            },
+            {
+              "x": 6,
+              "y": 1,
+              "type": "wall",
+              "contents": []
+            },
+            {
+              "x": 7,
+              "y": 1,
+              "type": "empty",
+              "contents": []
+            }
+          ],
+          "note": "you didn't move",
+          "blocked_by": "other_agent"
+        },
+        "latency_ms": 0
+      },
+      "outcome": {
+        "semantic_success": false,
+        "failure_classification": "agent_error",
+        "divergence_fields": []
+      },
+      "ended_at": "2026-04-09T19:02:24.261148+00:00"
+    }
+  ],
+  "seed": 101,
+  "model": "claude-sonnet-4-5",
+  "metadata": {
+    "turn_limit": 60,
+    "agent_ids": [
+      "A",
+      "B"
+    ],
+    "initial_positions": {
+      "A": [
+        3,
+        3
+      ],
+      "B": [
+        7,
+        1
+      ]
+    }
+  },
+  "status": "stuck",
+  "summary": {
+    "turns_played": 21,
+    "final_positions": {
+      "A": [
+        6,
+        0
+      ],
+      "B": [
+        7,
+        0
+      ]
+    },
+    "final_inventories": {
+      "A": [
+        "key"
+      ],
+      "B": []
+    },
+    "door_locked": true,
+    "key_holder": "A"
+  },
+  "ended_at": "2026-04-09T19:02:24.261220+00:00"
+}

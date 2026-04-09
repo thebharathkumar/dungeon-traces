@@ -1,0 +1,16 @@
+{
+  "run_id": "seed7",
+  "seed": 7,
+  "model": "claude-sonnet-4-5",
+  "turn_limit": 60,
+  "status": "stuck",
+  "turns_played": 15,
+  "total_events": 31,
+  "classification_counts": {
+    "success": 11,
+    "agent_error": 5,
+    "environment_constraint": 15
+  },
+  "wall_seconds": 70.48,
+  "events_path": "runs/phase4/events_seed7.ndjson"
+}

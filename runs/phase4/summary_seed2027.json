@@ -1,0 +1,16 @@
+{
+  "run_id": "seed2027",
+  "seed": 2027,
+  "model": "claude-sonnet-4-5",
+  "turn_limit": 60,
+  "status": "stuck",
+  "turns_played": 15,
+  "total_events": 31,
+  "classification_counts": {
+    "success": 15,
+    "agent_error": 9,
+    "environment_constraint": 7
+  },
+  "wall_seconds": 72.77,
+  "events_path": "runs/phase4/events_seed2027.ndjson"
+}

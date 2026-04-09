@@ -83,14 +83,17 @@ The viewer shows:
 
 ## Included runs
 
-The four runs under `runs/phase4/` are the reference dataset for this submission. Model `claude-sonnet-4-5`, turn limit 60.
+The five runs under `runs/phase4/` are the reference dataset for this submission. Model `claude-sonnet-4-5`, turn limit 60.
 
 | seed | final status | turns | events | headline incident |
 |-----:|:-------------|------:|-------:|:------------------|
 |    7 | stuck        |    15 |     31 | `agent_error` vs `environment_constraint` side-by-side on the same move tool |
 |   42 | stuck        |    12 |     25 | one `coordination_failure`: A walks into the cell B just moved to |
 |  101 | stuck        |    21 |     43 | the only successful `pick_up` in the batch (A collects the key on turn 3) |
+|  155 | timeout      |    60 |    120 | the only run to reach the 60-turn limit without tripping the stuck counter, 69 successful actions and no coordination failures |
 | 2027 | stuck        |    15 |     31 | 9 `agent_error` events on B demonstrating that even with last-action feedback, Sonnet sometimes retries known-blocked moves |
+
+The LLM is nondeterministic at `temperature=1` (the Anthropic SDK default), so running `scripts/run_phase4.py` against these seeds will produce statistically similar but not byte-identical artifacts. The committed files under `runs/phase4/` are the exact runs the per-turn writeups in `ANALYSIS.md` reference.
 
 Per-turn incident writeups are in [ANALYSIS.md](./ANALYSIS.md#run-by-run-incidents).
 

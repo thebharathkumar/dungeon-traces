@@ -29,7 +29,7 @@ from dungeon.game import ConsoleLogger, run_game  # noqa: E402
 from dungeon.tracing import build_default_tracer  # noqa: E402
 from dungeon.world import render_ascii  # noqa: E402
 
-SEEDS = [7, 42, 101, 2027]
+SEEDS = [7, 42, 101, 155, 2027]
 # Haiku 4.5 was too cautious in Phase 4 pilots: it would call observe
 # every turn and never commit to exploring, which starved the trace
 # layer of the stale-belief failures it is built to diagnose. Sonnet 4.5

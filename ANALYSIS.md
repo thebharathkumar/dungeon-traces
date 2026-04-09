@@ -71,7 +71,7 @@ The viewer is a single file (`viewer/index.html`, ~900 lines, vanilla JS and CSS
 
 ## Run-by-run incidents
 
-All four included runs are with `claude-sonnet-4-5` at `turn_limit=60`. Every one of them ended in the `stuck` status, which is itself the most interesting cross-run finding: Sonnet is meaningfully risk-averse about committing to exploration in a sparse-information environment, and will oscillate between two adjacent directions for many turns rather than reverse course. The `last_action_feedback` channel added to the prompt does unstick the worst pathology (repeating the same failed direction verbatim) but does not make Sonnet a great explorer, which is exactly the class of finding the trace layer is built to make visible. Per-event classification is where the interesting texture lives.
+All five included runs are with `claude-sonnet-4-5` at `turn_limit=60`. Four of them ended in the `stuck` status and one (seed 155) reached `timeout`. No run in this batch reached `success`, which is itself the most interesting cross-run finding: Sonnet is meaningfully risk-averse about committing to exploration in a sparse-information environment, and will oscillate between two adjacent directions for many turns rather than reverse course. The `last_action_feedback` channel added to the prompt does unstick the worst pathology (repeating the same failed direction verbatim) but does not make Sonnet a great explorer, which is exactly the class of finding the trace layer is built to make visible. Per-event classification is where the interesting texture lives.
 
 Headline per seed:
 
@@ -80,6 +80,7 @@ Headline per seed:
 |    7 |    15 |     31 |      11 |           5 |               0 |                    0 |                     15 |
 |   42 |    12 |     25 |      10 |           7 |               0 |                    1 |                      7 |
 |  101 |    21 |     43 |      20 |           4 |               0 |                    0 |                     19 |
+|  155 |    60 |    120 |      69 |           6 |               0 |                    0 |                     45 |
 | 2027 |    15 |     31 |      15 |           9 |               0 |                    0 |                      7 |
 
 ### Run 1: seed 7
@@ -125,6 +126,18 @@ The `agent_error` heavy run. B hit agent-error classified failures on 9 of its 1
 - Reasoning field: *"I need to continue exploring to find the key and map out the dungeon."* No acknowledgement of the previous failure, despite it being in the user prompt.
 
 This turn is the single best evidence that Sonnet's belief-use is imperfect: the information was there, the feedback was there, and the model still chose a known-blocked action. The classifier is working correctly; the *agent* is the bug. For a reviewer asking "are the traces actually telling me what went wrong, or am I looking at a trace-layer artifact?", this is the incident to point at: the classifier categorically rules out information problems and puts the blame exactly where it belongs.
+
+### Run 5: seed 155
+
+The only run in the batch to reach `turn_limit=60` without the stuck counter tripping, and the clearest illustration of the "exploration failure, not divergence failure" category. The final event count is 120, exactly twice the turn count.
+
+- **Agent A, turn 6, `pick_up(item='key')`** at (3, 7). Classifier: **success**. A started at (1, 7), walked east to (2, 7), then east to (3, 7), and picked up the key. This is the second successful key pickup in the batch, two turns slower than seed 101's turn-3 pickup.
+- **Agent A then walked the wrong way.** With the key in hand, A moved *north* on turn 8 (to (3, 6)) instead of *east* toward the door at (6, 7). A never recovered: by turn 59 the key-holder was at (6, 0), the top edge of the map, diagonally opposite the door.
+- **Neither agent ever observed the door.** `last_known_door_locked` stays `unknown` for every one of A's 60 events and every one of B's 60 events. The door cell at (6, 7) was never in either agent's 3x3 window in any turn. This is the most interesting single finding of the run: **the divergence layer has nothing to flag because both agents' beliefs about `door_locked` were never populated**. The classification counts reflect this — 0 coordination_failure, 0 information_lag, 6 agent_error, 45 environment_constraint. The failure is upstream of the trace layer: there is no divergence to detect when there is no belief to diverge from.
+- **Zero messages.** Neither agent ever called `send_message` or `read_messages` across all 60 turns. A had a piece of information the partner desperately needed (the key-holder's location, plus the fact that the key was now collected) and never communicated it. This is the failure mode a reviewer should point at when asking "why is inter-agent communication a first-class affordance in this sim?".
+- **Tool-use asymmetry.** A called `observe` 34 times and `move` 25 times; B called `move` 57 times and `observe` only 3 times. Same model, same system prompt, same environment — polar opposite strategies. Under a different seed this asymmetry might have been productive (A maps, B explores), but with no coordination channel it just means A was contemplating while B was wandering.
+
+The Phase 3 viewer makes this run's story visible at a glance: the belief-vs-truth heatmap is almost entirely gray cells (beliefs were `unknown`, not `diverged`), with a single amber stripe across A's row where it briefly lost sight of the key position. A reviewer scanning the heatmap sees "nothing red" and has to read the detail panel to realize that the nothing-red is itself the bug: the agents never learned enough to be wrong.
 
 ## Limitations and what I would do next
 

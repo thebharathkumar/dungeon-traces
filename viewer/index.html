@@ -251,6 +251,14 @@
     }
     .detail-meta .agent-tag.A { color: var(--blue); }
     .detail-meta .agent-tag.B { color: var(--violet); }
+    .detail-meta .meta-chip {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .detail-meta .meta-chip .label { color: var(--text-mute); }
+    .detail-meta .meta-chip .value { color: var(--text); }
+    .detail-meta .meta-chip.inv .value { color: #fde68a; font-weight: 600; }
     .pill {
       display: inline-block;
       padding: 2px 8px;
@@ -295,6 +303,12 @@
     .bvt-table tr.fact-unknown td { color: var(--text-mute); }
     .bvt-table td.actual-diverged { color: var(--red); }
     .bvt-table .age { color: var(--text-mute); font-size: 10px; }
+    .bvt-table .last-seen {
+      display: block;
+      color: var(--text-mute);
+      font-size: 10px;
+      margin-top: 2px;
+    }
     .bvt-table .caused-by {
       display: block;
       color: var(--violet);
@@ -357,6 +371,51 @@
     }
     .msg-list li .who { color: var(--text); font-weight: 600; }
     .msg-list li .when { color: var(--text-mute); }
+    .msg-summary {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .msg-summary .label { color: var(--text-mute); }
+    .msg-summary .value { color: var(--text); }
+    .msg-summary .value.zero { color: var(--text-mute); font-weight: 400; }
+    .msg-list:empty { display: none; }
+
+    .raw-details {
+      background: var(--bg-sunken);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .raw-details > summary {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-mute);
+      list-style: none;
+      user-select: none;
+    }
+    .raw-details > summary::-webkit-details-marker { display: none; }
+    .raw-details > summary::before {
+      content: "\25b8";
+      display: inline-block;
+      width: 12px;
+      color: var(--text-mute);
+      transition: transform 150ms ease;
+    }
+    .raw-details[open] > summary::before { transform: rotate(90deg); }
+    .raw-details > .raw-json {
+      border: 0;
+      border-top: 1px solid var(--border);
+      border-radius: 0 0 4px 4px;
+      margin: 0;
+    }
 
     /* ----- Heatmap ----- */
     .heatmap {
@@ -696,9 +755,9 @@
     const GRID_SIZE = 8;
 
     const FACT_KEYS = [
-      { id: "key_position",        belief: "last_known_key_position",     label: "key_position" },
-      { id: "door_locked",         belief: "last_known_door_locked",      label: "door_locked" },
-      { id: "other_agent_position", belief: "last_known_other_position",  label: "other_agent_position" },
+      { id: "key_position",        belief: "last_known_key_position",     lastSeen: "key_position",   label: "key_position" },
+      { id: "door_locked",         belief: "last_known_door_locked",      lastSeen: "door_locked",    label: "door_locked" },
+      { id: "other_agent_position", belief: "last_known_other_position",  lastSeen: "other_position", label: "other_agent_position" },
     ];
 
     const CLASSIFICATIONS = [
@@ -963,12 +1022,17 @@
       const aid = e.agent_id || "?";
       const succeeded = !!e.action_succeeded;
 
+      const lat = e.latency_ms || {};
+      const belief = e.agent_belief_state || {};
+      const inventoryStr = formatInventory(belief.inventory);
       const metaHtml =
         '<div class="detail-meta">' +
           '<span class="agent-tag ' + aid + '">Agent ' + escapeHtml(aid) + "</span>" +
-          '<span>turn ' + escapeHtml(String(e.turn)) + "</span>" +
-          '<span>lat ' + escapeHtml(String((e.latency_ms && e.latency_ms.total) || 0)) + "ms</span>" +
-          (e.usage ? '<span>tokens ' + (e.usage.input_tokens || 0) + " / " + (e.usage.output_tokens || 0) + "</span>" : "") +
+          '<span class="meta-chip"><span class="label">turn</span><span class="value">' + escapeHtml(String(e.turn)) + "</span></span>" +
+          '<span class="meta-chip"><span class="label">llm</span><span class="value">' + escapeHtml(String(lat.llm || 0)) + "ms</span></span>" +
+          '<span class="meta-chip"><span class="label">tool</span><span class="value">' + escapeHtml(String(lat.tool || 0)) + "ms</span></span>" +
+          (e.usage ? '<span class="meta-chip"><span class="label">tokens</span><span class="value">' + (e.usage.input_tokens || 0) + " / " + (e.usage.output_tokens || 0) + "</span></span>" : "") +
+          '<span class="meta-chip inv"><span class="label">inv</span><span class="value">' + escapeHtml(inventoryStr) + "</span></span>" +
           "</div>";
 
       const actionHtml =
@@ -999,8 +1063,10 @@
 
       const rawHtml =
         '<div class="detail-section">' +
-          '<div class="detail-label">Raw action_result</div>' +
-          '<div class="raw-json">' + escapeHtml(JSON.stringify(e.action_result || {}, null, 2)) + "</div>" +
+          '<details class="raw-details">' +
+            '<summary>Raw action_result</summary>' +
+            '<div class="raw-json">' + escapeHtml(JSON.stringify(e.action_result || {}, null, 2)) + "</div>" +
+          "</details>" +
         "</div>";
 
       el.detail.innerHTML = metaHtml + actionHtml + bvtHtml + reasoningHtml + msgHtml + rawHtml;
@@ -1017,6 +1083,9 @@
       const selfId = belief.self_id;
       const otherId = findOtherAgent(selfId, truth);
 
+      const factsLastSeen = belief.facts_last_seen || {};
+      const currentTurn = e.turn;
+
       const rows = FACT_KEYS.map(function (f) {
         const state = accuracy[f.id] || "unknown";
         const believed = belief[f.belief];
@@ -1031,6 +1100,23 @@
         const ageTxt = d && d.divergence_age != null
           ? '(stale ' + d.divergence_age + (d.divergence_age === 1 ? " turn" : " turns") + ")"
           : "";
+
+        // Staleness from direct observation: facts_last_seen[lastSeen] is the
+        // absolute turn when the agent last confirmed this fact. Surface it
+        // for diverged rows so the reviewer can see exactly how long it has
+        // been since the agent checked.
+        let lastSeenHtml = "";
+        if (state === "diverged" && f.lastSeen && factsLastSeen[f.lastSeen] != null) {
+          const seenTurn = factsLastSeen[f.lastSeen];
+          const seenAge = currentTurn - seenTurn;
+          const suffix = seenAge === 0
+            ? "observed this turn"
+            : "last observed " + seenAge + " turn" + (seenAge === 1 ? "" : "s") + " ago (turn " + seenTurn + ")";
+          lastSeenHtml = '<span class="last-seen">' + escapeHtml(suffix) + "</span>";
+        } else if (state === "diverged" && f.lastSeen && factsLastSeen[f.lastSeen] == null) {
+          lastSeenHtml = '<span class="last-seen">never directly observed</span>';
+        }
+
         const causedBy = d && d.caused_by_agent && d.caused_by_agent !== selfId
           ? '<span class="caused-by">caused by ' + escapeHtml(d.caused_by_agent) +
             (d.caused_at_turn != null ? " on turn " + d.caused_at_turn : "") +
@@ -1044,6 +1130,7 @@
             "<td>" + escapeHtml(believedStr) + "</td>" +
             '<td class="' + actualCls + '">' + escapeHtml(actualStr) +
               (ageTxt ? ' <span class="age">' + escapeHtml(ageTxt) + "</span>" : "") +
+              lastSeenHtml +
               causedBy +
             "</td>" +
           "</tr>"
@@ -1103,11 +1190,31 @@
       return String(v);
     }
 
+    function formatInventory(inv) {
+      if (!Array.isArray(inv) || inv.length === 0) return "empty";
+      return inv.join(", ");
+    }
+
     function renderMessagesBlock(e) {
       const ctx = e.message_context || {};
       const received = ctx.received_preview || [];
       const sent = ctx.sent_this_turn || [];
-      if (received.length === 0 && sent.length === 0) return "";
+      const inboxCount = ctx.inbox_at_decision_count != null ? ctx.inbox_at_decision_count : 0;
+      const unreadAfter = ctx.unread_after_turn != null ? ctx.unread_after_turn : 0;
+      const sentCount = sent.length;
+
+      function chip(label, value) {
+        const zeroCls = value === 0 ? " zero" : "";
+        return '<span><span class="label">' + label + '</span> <span class="value' + zeroCls + '">' + value + "</span></span>";
+      }
+
+      const summaryHtml =
+        '<div class="msg-summary">' +
+          chip("inbox at decision", inboxCount) +
+          chip("sent this turn", sentCount) +
+          chip("unread after turn", unreadAfter) +
+        "</div>";
+
       const items = [];
       received.forEach(function (m) {
         items.push(
@@ -1130,6 +1237,7 @@
       return (
         '<div class="detail-section">' +
           '<div class="detail-label">Messages</div>' +
+          summaryHtml +
           '<ul class="msg-list">' + items.join("") + "</ul>" +
         "</div>"
       );

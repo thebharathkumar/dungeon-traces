@@ -198,9 +198,29 @@
       overflow: hidden;
       text-overflow: ellipsis;
       color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
     }
-    .row .action .tool { color: var(--text); }
-    .row .action .args { color: var(--text-mute); }
+    .row .action .verb {
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .row .action .noop-tag {
+      flex-shrink: 0;
+      padding: 0 5px;
+      font-size: 9px;
+      line-height: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-mute);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+    }
     .row .dot {
       width: 10px;
       height: 10px;
@@ -212,6 +232,9 @@
     .row .dot.diverged  { background: var(--red); }
     .row .dot.stale     { background: var(--amber); }
     .row .dot.unknown   { background: var(--text-mute); }
+
+    .row.turn-band-even { background: rgba(255,255,255,0.018); }
+    .row.turn-band-odd  { background: transparent; }
 
     .row.cls-agent_error          { background: rgba(248,113,113,0.08); border-left-color: var(--red); }
     .row.cls-information_lag      { background: rgba(245,165,36,0.09); border-left-color: var(--amber); }
@@ -919,16 +942,20 @@
         const cls = e.failure_classification || "success";
         const selected = i === state.selectedIndex ? " selected" : "";
         const tool = (e.action_taken && e.action_taken.tool_name) || "(no tool)";
-        const args = formatArgs(e.action_taken && e.action_taken.tool_input);
+        const toolInput = e.action_taken && e.action_taken.tool_input;
         const dotClass = overallDotClass(e);
         const turn = e.turn != null ? String(e.turn).padStart(2, "0") : "--";
         const aid = e.agent_id || "?";
+        const bandCls = " turn-band-" + ((e.turn || 0) % 2 === 0 ? "even" : "odd");
+        const succeeded = e.action_succeeded !== false;
+        const verb = formatActionPlainEnglish(tool, toolInput);
         return (
-          '<div class="row cls-' + cls + selected + '" data-index="' + i + '">' +
+          '<div class="row cls-' + cls + bandCls + selected + '" data-index="' + i + '">' +
             '<div class="turn">' + escapeHtml(turn) + "</div>" +
             '<div class="agent ' + aid + '">' + escapeHtml(aid) + "</div>" +
-            '<div class="action"><span class="tool">' + escapeHtml(tool) + "</span>" +
-              (args ? '<span class="args">(' + escapeHtml(args) + ")</span>" : "") +
+            '<div class="action">' +
+              '<span class="verb">' + escapeHtml(verb) + "</span>" +
+              (succeeded ? "" : '<span class="noop-tag">noop</span>') +
             "</div>" +
             '<div class="dot ' + dotClass + '"></div>' +
           "</div>"
@@ -957,6 +984,47 @@
         if (s && s.length > 30) s = s.slice(0, 27) + "...";
         return k + "=" + s;
       }).join(", ");
+    }
+
+    // Plain-English summary used in the timeline. The detail panel still
+    // renders the mechanistic tool(args) form; this is the reviewer-facing
+    // skimmable view.
+    function formatActionPlainEnglish(tool, input) {
+      const inp = (input && typeof input === "object") ? input : {};
+      switch (tool) {
+        case "observe":
+          return "observe";
+        case "move": {
+          const dir = inp.direction || "?";
+          return "move " + dir;
+        }
+        case "pickup_item": {
+          const item = inp.item || "item";
+          return "pick up " + item;
+        }
+        case "use_item": {
+          const item = inp.item || "item";
+          const target = inp.target;
+          if (item === "key" && target === "door") return "unlock door with key";
+          if (target) return "use " + item + " on " + target;
+          return "use " + item;
+        }
+        case "send_message": {
+          const recipient = inp.recipient || "?";
+          const content = typeof inp.content === "string" ? inp.content : "";
+          const clipped = content.length > 24 ? content.slice(0, 24) + "..." : content;
+          return 'send ' + recipient + (clipped ? ' "' + clipped + '"' : "");
+        }
+        case "read_messages":
+          return "read messages";
+        case "wait":
+          return "wait";
+        default: {
+          if (!tool) return "(no tool)";
+          const args = formatArgs(inp);
+          return args ? tool + "(" + args + ")" : tool;
+        }
+      }
     }
 
     // Timeline click + keyboard selection.

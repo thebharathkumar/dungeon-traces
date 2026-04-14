@@ -832,6 +832,14 @@
     };
 
     // ------- File loading -------
+    function pickInitialSelection(events) {
+      if (!events || events.length === 0) return -1;
+      for (let i = 0; i < events.length; i++) {
+        if (events[i].failure_classification != null) return i;
+      }
+      return 0;
+    }
+
     el.input.addEventListener("change", function (e) {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
@@ -841,7 +849,7 @@
           const events = parseNdjson(String(reader.result || ""));
           state.events = events;
           state.filename = file.name;
-          state.selectedIndex = events.length > 0 ? 0 : -1;
+          state.selectedIndex = pickInitialSelection(events);
           state.globalCellTypes = buildGlobalCellTypes(events);
           render();
         } catch (err) {

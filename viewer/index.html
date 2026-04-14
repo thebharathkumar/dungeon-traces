@@ -447,19 +447,19 @@
       color: var(--text-dim);
     }
     .map-panel .panel-body {
-      padding: 22px 14px 16px;
+      padding: 22px 14px 20px;
       max-height: none;
       overflow: visible;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .map-grid {
       display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      grid-template-rows: repeat(8, 1fr);
+      grid-template-columns: repeat(8, 64px);
+      grid-auto-rows: 64px;
       gap: 2px;
-      width: 100%;
-      max-width: 560px;
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
+      width: max-content;
       background: var(--bg-sunken);
       border: 1px solid var(--border);
       border-radius: 4px;
@@ -467,7 +467,8 @@
     }
     .map-cell {
       position: relative;
-      aspect-ratio: 1 / 1;
+      width: 64px;
+      height: 64px;
       background: #0a0c0f;
       border-radius: 2px;
       transition: background-color 200ms ease, box-shadow 200ms ease;
@@ -544,6 +545,8 @@
       position: absolute;
       left: 50%;
       top: 50%;
+      width: 22px;
+      height: 22px;
       transform: translate(-50%, -50%);
       pointer-events: none;
     }
@@ -552,8 +555,9 @@
       flex-wrap: wrap;
       gap: 12px 20px;
       justify-content: center;
-      margin: 18px auto 0;
+      width: 100%;
       max-width: 680px;
+      margin-top: 18px;
       padding-top: 14px;
       border-top: 1px solid var(--border);
       font-family: var(--mono);

@@ -431,6 +431,189 @@
       vertical-align: middle;
       margin-right: 4px;
     }
+
+    /* ----- Dungeon map panel ----- */
+    .map-panel .panel-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .map-sublabel {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: none;
+      letter-spacing: 0.4px;
+      color: var(--text-dim);
+    }
+    .map-panel .panel-body {
+      padding: 22px 14px 16px;
+      max-height: none;
+      overflow: visible;
+    }
+    .map-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      gap: 2px;
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      background: var(--bg-sunken);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px;
+    }
+    .map-cell {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      background: #0a0c0f;
+      border-radius: 2px;
+      transition: background-color 200ms ease, box-shadow 200ms ease;
+    }
+    .map-cell:hover {
+      outline: 1px solid var(--text-dim);
+      outline-offset: -1px;
+    }
+    .map-cell.state-unknown { background: #0a0c0f; }
+    .map-cell.state-empty   { background: #1e2028; }
+    .map-cell.state-wall {
+      background:
+        repeating-linear-gradient(
+          45deg,
+          #1a1d27 0 3px,
+          #2b3040 3px 6px
+        );
+    }
+    .map-cell.cell-exit {
+      background: #1e2028;
+      box-shadow: inset 0 0 0 2px #ffffff;
+    }
+    .map-cell.cell-door-locked {
+      background: #1e2028;
+      box-shadow: inset 0 0 0 2px var(--red);
+    }
+    .map-cell.cell-door-unlocked {
+      background: #1e2028;
+      box-shadow: inset 0 0 0 2px var(--green);
+    }
+    .map-exit-label {
+      position: absolute;
+      top: 3px;
+      left: 4px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+    .map-marker {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 52%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text);
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+    .map-marker.agent-A {
+      background: rgba(96, 165, 250, 0.85);
+      border: 2px solid var(--blue);
+    }
+    .map-marker.agent-B {
+      background: rgba(167, 139, 250, 0.85);
+      border: 2px solid var(--violet);
+    }
+    .map-marker.ghost {
+      background: transparent;
+      border-style: dashed;
+      opacity: 0.55;
+    }
+    .map-key-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      justify-content: center;
+      margin: 18px auto 0;
+      max-width: 680px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-mute);
+    }
+    .map-legend > span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .map-legend .sw {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+    .map-legend .sw.map-sw-empty   { background: #1e2028; border: 1px solid var(--border); }
+    .map-legend .sw.map-sw-unknown { background: #0a0c0f; border: 1px solid var(--border); }
+    .map-legend .sw.map-sw-wall {
+      background: repeating-linear-gradient(45deg, #1a1d27 0 3px, #2b3040 3px 6px);
+      border: 1px solid var(--border);
+    }
+    .map-legend .sw.map-sw-agent-A {
+      border-radius: 50%;
+      background: rgba(96,165,250,0.85);
+      border: 2px solid var(--blue);
+    }
+    .map-legend .sw.map-sw-agent-B {
+      border-radius: 50%;
+      background: rgba(167,139,250,0.85);
+      border: 2px solid var(--violet);
+    }
+    .map-legend .sw.map-sw-ghost-A {
+      border-radius: 50%;
+      background: transparent;
+      border: 2px dashed var(--blue);
+      opacity: 0.55;
+    }
+    .map-legend .sw.map-sw-ghost-B {
+      border-radius: 50%;
+      background: transparent;
+      border: 2px dashed var(--violet);
+      opacity: 0.55;
+    }
+    .map-legend .sw.map-sw-key {
+      background: transparent;
+      border: 1.5px solid #fde68a;
+      border-radius: 50%;
+    }
+    .map-legend .sw.map-sw-door-locked {
+      background: #1e2028;
+      box-shadow: inset 0 0 0 2px var(--red);
+    }
+    .map-legend .sw.map-sw-exit {
+      background: #1e2028;
+      box-shadow: inset 0 0 0 2px #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -467,6 +650,16 @@
       </div>
     </div>
 
+    <div class="panel map-panel">
+      <div class="panel-header">
+        <span>Dungeon map</span>
+        <span class="map-sublabel" id="map-sublabel"></span>
+      </div>
+      <div class="panel-body" id="map">
+        <div class="placeholder">Load an NDJSON file to see the dungeon.</div>
+      </div>
+    </div>
+
     <div class="panel heatmap-panel">
       <div class="panel-header">Belief divergence heatmap</div>
       <div class="panel-body" id="heatmap">
@@ -484,7 +677,12 @@
       events: [],
       filename: null,
       selectedIndex: -1,
+      // Union of every observed cell across every event, keyed "x,y".
+      // Populated once per file load from each event's action_result.visible.
+      globalCellTypes: {},
     };
+
+    const GRID_SIZE = 8;
 
     const FACT_KEYS = [
       { id: "key_position",        belief: "last_known_key_position",     label: "key_position" },
@@ -509,6 +707,8 @@
       timeline: document.getElementById("timeline"),
       detail: document.getElementById("detail"),
       heatmap: document.getElementById("heatmap"),
+      map: document.getElementById("map"),
+      mapSublabel: document.getElementById("map-sublabel"),
     };
 
     // ------- File loading -------
@@ -522,11 +722,13 @@
           state.events = events;
           state.filename = file.name;
           state.selectedIndex = events.length > 0 ? 0 : -1;
+          state.globalCellTypes = buildGlobalCellTypes(events);
           render();
         } catch (err) {
           state.events = [];
           state.filename = file.name + " (parse error)";
           state.selectedIndex = -1;
+          state.globalCellTypes = {};
           render();
           console.error(err);
           alert("Failed to parse NDJSON: " + err.message);
@@ -585,6 +787,7 @@
       renderChips(s);
       renderTimeline();
       renderDetail();
+      renderMap();
       renderHeatmap();
     }
 
@@ -733,6 +936,7 @@
       const cell = el.heatmap.querySelector('.heatmap-cell[data-index="' + i + '"]');
       if (cell) cell.classList.add("selected");
       renderDetail();
+      renderMap();
     }
 
     // ------- Detail panel rendering -------
@@ -1018,6 +1222,190 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
+    }
+
+    // ------- Dungeon map rendering -------
+
+    // Scan every event once to build the union of all cells any agent
+    // ever observed. Walls beat empties in case of contradiction
+    // (shouldn't happen in the sim, but be defensive). Cells that
+    // never appear here render as "unknown" on the map.
+    function buildGlobalCellTypes(events) {
+      const out = {};
+      for (let i = 0; i < events.length; i++) {
+        const res = events[i] && events[i].action_result;
+        const visible = (res && res.visible) || [];
+        for (let j = 0; j < visible.length; j++) {
+          const c = visible[j];
+          if (!c || typeof c.x !== "number" || typeof c.y !== "number") continue;
+          const key = c.x + "," + c.y;
+          if (c.type === "wall") {
+            out[key] = "wall";
+          } else if (c.type === "empty" && out[key] !== "wall") {
+            out[key] = "empty";
+          }
+        }
+      }
+      return out;
+    }
+
+    function renderMap() {
+      if (state.events.length === 0 || state.selectedIndex < 0) {
+        el.map.innerHTML = '<div class="placeholder">Load an NDJSON file to see the dungeon.</div>';
+        if (el.mapSublabel) el.mapSublabel.textContent = "";
+        return;
+      }
+      const e = state.events[state.selectedIndex];
+      const belief = e.agent_belief_state || {};
+      const truth = e.world_truth_state || {};
+      const selfId = belief.self_id || e.agent_id || "?";
+      const otherId = selfId === "A" ? "B" : (selfId === "B" ? "A" : null);
+
+      // Header sublabel: "turn 5 · agent A view". Middle dot (·) is
+      // U+00B7, not an em dash, kept consistent with the "caused by"
+      // annotation style already used elsewhere.
+      if (el.mapSublabel) {
+        el.mapSublabel.textContent = "turn " + (e.turn != null ? e.turn : "?") + " \u00b7 agent " + selfId + " view";
+      }
+
+      // Seen set for fog-of-war overlay. The selected agent's own
+      // current position is always considered seen even if it is
+      // somehow missing from the list.
+      const seen = new Set();
+      const seenList = belief.seen_cell_positions || [];
+      for (let i = 0; i < seenList.length; i++) {
+        const p = seenList[i];
+        if (Array.isArray(p) && p.length === 2) seen.add(p[0] + "," + p[1]);
+      }
+      if (Array.isArray(belief.position) && belief.position.length === 2) {
+        seen.add(belief.position[0] + "," + belief.position[1]);
+      }
+
+      // Truth-driven item positions. The map always shows ground
+      // truth; fog only controls the background shading of cells
+      // without items.
+      const agentPositions = truth.agent_positions || {};
+      const aPos = Array.isArray(agentPositions.A) ? agentPositions.A : null;
+      const bPos = Array.isArray(agentPositions.B) ? agentPositions.B : null;
+      const keyPos = (truth.key_holder == null && Array.isArray(truth.key_position)) ? truth.key_position : null;
+      const doorPos = Array.isArray(truth.door_position) ? truth.door_position : null;
+      const exitPos = Array.isArray(truth.exit_position) ? truth.exit_position : null;
+
+      // Belief ghost: where the selected agent thinks the other
+      // agent is, drawn only when that disagrees with the truth.
+      let ghostPos = null;
+      if (otherId) {
+        const believed = belief.last_known_other_position;
+        if (Array.isArray(believed) && believed.length === 2) {
+          const actual = agentPositions[otherId];
+          const disagrees = !Array.isArray(actual)
+            || actual[0] !== believed[0]
+            || actual[1] !== believed[1];
+          if (disagrees) ghostPos = believed;
+        }
+      }
+
+      const cells = [];
+      for (let y = 0; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          const key = x + "," + y;
+          const globalType = state.globalCellTypes[key];
+          const inFog = !seen.has(key);
+
+          let stateClass = "state-unknown";
+          if (globalType === "wall") {
+            stateClass = "state-wall";
+          } else if (globalType === "empty" && !inFog) {
+            stateClass = "state-empty";
+          }
+
+          const modifiers = [];
+          const isDoor = doorPos && doorPos[0] === x && doorPos[1] === y;
+          const isExit = exitPos && exitPos[0] === x && exitPos[1] === y;
+          if (isDoor) {
+            modifiers.push(truth.door_locked ? "cell-door-locked" : "cell-door-unlocked");
+          }
+          if (isExit) {
+            modifiers.push("cell-exit");
+          }
+
+          const inner = [];
+          if (isExit) {
+            inner.push('<div class="map-exit-label">EXIT</div>');
+          }
+          if (keyPos && keyPos[0] === x && keyPos[1] === y) {
+            inner.push(keyIconSvg());
+          }
+          // Ghost renders under the live markers so a same-cell
+          // overlap still shows the solid agent on top.
+          if (ghostPos && ghostPos[0] === x && ghostPos[1] === y && otherId) {
+            inner.push('<div class="map-marker agent-' + otherId + ' ghost">' + escapeHtml(otherId) + '</div>');
+          }
+          if (aPos && aPos[0] === x && aPos[1] === y) {
+            inner.push('<div class="map-marker agent-A">A</div>');
+          }
+          if (bPos && bPos[0] === x && bPos[1] === y) {
+            inner.push('<div class="map-marker agent-B">B</div>');
+          }
+
+          const descriptors = [];
+          descriptors.push(globalType ? globalType : "unknown");
+          if (inFog) descriptors.push("fog");
+          if (isDoor) descriptors.push(truth.door_locked ? "door locked" : "door unlocked");
+          if (isExit) descriptors.push("exit");
+          if (keyPos && keyPos[0] === x && keyPos[1] === y) descriptors.push("key");
+          const title = "(" + x + ", " + y + ") " + descriptors.join(" \u00b7 ");
+
+          const classList = ["map-cell", stateClass].concat(modifiers).join(" ");
+          cells.push(
+            '<div class="' + classList + '" title="' + escapeHtml(title) + '">' +
+              inner.join("") +
+            "</div>"
+          );
+        }
+      }
+
+      const ariaLabel = "Dungeon grid, turn " + (e.turn != null ? e.turn : "?") +
+        ", viewing agent " + selfId + "'s field of vision";
+      const gridHtml =
+        '<div class="map-grid" role="img" aria-label="' + escapeHtml(ariaLabel) + '">' +
+          cells.join("") +
+        "</div>";
+
+      el.map.innerHTML = gridHtml + renderMapLegend(otherId);
+    }
+
+    function keyIconSvg() {
+      // Hand-drawn key glyph, 22px, outlined only so it reads against
+      // the #1e2028 cell background. No emoji.
+      return (
+        '<svg class="map-key-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">' +
+          '<circle cx="8" cy="12" r="4" fill="none" stroke="#fde68a" stroke-width="2"/>' +
+          '<line x1="12" y1="12" x2="20" y2="12" stroke="#fde68a" stroke-width="2" stroke-linecap="round"/>' +
+          '<line x1="17" y1="12" x2="17" y2="15.5" stroke="#fde68a" stroke-width="2" stroke-linecap="round"/>' +
+          '<line x1="20" y1="12" x2="20" y2="15.5" stroke="#fde68a" stroke-width="2" stroke-linecap="round"/>' +
+        "</svg>"
+      );
+    }
+
+    function renderMapLegend(otherId) {
+      const ghostClass = otherId === "A" ? "map-sw-ghost-A" : "map-sw-ghost-B";
+      const ghostLabel = otherId
+        ? "believed " + otherId + " (stale)"
+        : "believed position (stale)";
+      return (
+        '<div class="map-legend">' +
+          '<span><span class="sw map-sw-agent-A"></span>agent A</span>' +
+          '<span><span class="sw map-sw-agent-B"></span>agent B</span>' +
+          '<span><span class="sw ' + ghostClass + '"></span>' + escapeHtml(ghostLabel) + "</span>" +
+          '<span><span class="sw map-sw-key"></span>key</span>' +
+          '<span><span class="sw map-sw-door-locked"></span>door locked</span>' +
+          '<span><span class="sw map-sw-exit"></span>exit</span>' +
+          '<span><span class="sw map-sw-empty"></span>known empty</span>' +
+          '<span><span class="sw map-sw-wall"></span>wall</span>' +
+          '<span><span class="sw map-sw-unknown"></span>unknown / fog</span>' +
+        "</div>"
+      );
     }
 
     render();

@@ -13,3 +13,7 @@ venv/
 # are force-added explicitly so the submission includes them.
 runs/*smoke*
 runs/*.tmp
+
+# Local-only Claude Code skills installed via third-party tooling
+# (e.g. `npx uipro-cli init --ai claude`). Not part of the submission.
+.claude/

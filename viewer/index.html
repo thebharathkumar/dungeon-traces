@@ -550,6 +550,11 @@
       transform: translate(-50%, -50%);
       pointer-events: none;
     }
+    .map-key-icon > svg {
+      display: block;
+      width: 22px;
+      height: 22px;
+    }
     .map-legend {
       display: flex;
       flex-wrap: wrap;
@@ -1381,14 +1386,22 @@
 
     function keyIconSvg() {
       // Hand-drawn key glyph, 22px, outlined only so it reads against
-      // the #1e2028 cell background. No emoji.
+      // the #1e2028 cell background. No emoji. The SVG is wrapped in a
+      // plain div that handles absolute positioning, because CSS
+      // transform: translate(-50%, -50%) applied directly to a root
+      // <svg> element resolves percentages against the SVG viewport
+      // (not the rendered pixel box) in several browsers and drifts
+      // the glyph off-cell. Wrapping in a div uses the same
+      // positioning path that already works for .map-marker.
       return (
-        '<svg class="map-key-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">' +
-          '<circle cx="8" cy="12" r="4" fill="none" stroke="#fde68a" stroke-width="2"/>' +
-          '<line x1="12" y1="12" x2="20" y2="12" stroke="#fde68a" stroke-width="2" stroke-linecap="round"/>' +
-          '<line x1="17" y1="12" x2="17" y2="15.5" stroke="#fde68a" stroke-width="2" stroke-linecap="round"/>' +
-          '<line x1="20" y1="12" x2="20" y2="15.5" stroke="#fde68a" stroke-width="2" stroke-linecap="round"/>' +
-        "</svg>"
+        '<div class="map-key-icon">' +
+          '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">' +
+            '<circle cx="8" cy="12" r="4" fill="none" stroke="#fde68a" stroke-width="2"/>' +
+            '<line x1="12" y1="12" x2="20" y2="12" stroke="#fde68a" stroke-width="2" stroke-linecap="round"/>' +
+            '<line x1="17" y1="12" x2="17" y2="15.5" stroke="#fde68a" stroke-width="2" stroke-linecap="round"/>' +
+            '<line x1="20" y1="12" x2="20" y2="15.5" stroke="#fde68a" stroke-width="2" stroke-linecap="round"/>' +
+          "</svg>" +
+        "</div>"
       );
     }
 

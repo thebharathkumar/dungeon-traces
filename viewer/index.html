@@ -103,6 +103,29 @@
     .fact .value.status-timeout { color: var(--amber); }
     .fact .value.status-stuck { color: var(--red); }
 
+    .headline {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .headline .status {
+      font-family: var(--sans);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1;
+      color: var(--text);
+    }
+    .headline .status.status-success { color: var(--green); }
+    .headline .status.status-timeout { color: var(--amber); }
+    .headline .status.status-stuck { color: var(--red); }
+    .headline .subtitle {
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
     .chips {
       display: flex;
       gap: 8px;
@@ -132,6 +155,10 @@
     .chip.information_lag .dot { background: var(--amber); }
     .chip.coordination_failure .dot { background: var(--violet); }
     .chip.environment_constraint .dot { background: var(--blue); }
+    .chip.zero-state {
+      color: var(--text-mute);
+      font-style: italic;
+    }
 
     /* ----- Main content grid (timeline | detail, heatmap full width) ----- */
     .grid {
@@ -721,9 +748,9 @@
           <input id="ndjson-input" type="file" accept=".ndjson,application/x-ndjson,application/json,text/plain" />
           <span class="filename" id="filename">no file loaded</span>
         </div>
-        <div class="facts" id="facts"></div>
       </div>
       <div class="summary-row">
+        <div class="facts" id="facts"></div>
         <div class="chips" id="chips"></div>
       </div>
     </div>
@@ -852,10 +879,20 @@
       const last = events[events.length - 1];
       const counts = {};
       CLASSIFICATIONS.forEach(function (c) { counts[c] = 0; });
+      let llmMs = 0;
+      let inputTokens = 0;
+      let outputTokens = 0;
       for (let i = 0; i < events.length; i++) {
         const e = events[i];
         const key = e.failure_classification || "success";
         counts[key] = (counts[key] || 0) + 1;
+        if (e.latency_ms && typeof e.latency_ms.llm === "number") {
+          llmMs += e.latency_ms.llm;
+        }
+        if (e.usage) {
+          if (typeof e.usage.input_tokens === "number") inputTokens += e.usage.input_tokens;
+          if (typeof e.usage.output_tokens === "number") outputTokens += e.usage.output_tokens;
+        }
       }
       const status =
         (last.world_truth_state && last.world_truth_state.status) || "unknown";
@@ -869,6 +906,9 @@
         timestamp: timestamp,
         counts: counts,
         total: events.length,
+        llmMs: llmMs,
+        inputTokens: inputTokens,
+        outputTokens: outputTokens,
       };
     }
 
@@ -890,12 +930,16 @@
         return;
       }
       const statusClass = "status-" + s.status;
+      const subtitle = s.runId + " · " + s.turns + " turns · " + s.total + " events";
+      const llmStr = formatMs(s.llmMs);
+      const tokensStr = s.inputTokens.toLocaleString() + " in / " + s.outputTokens.toLocaleString() + " out";
       el.facts.innerHTML =
-        fact("run", s.runId) +
-        fact("status", s.status, statusClass) +
-        fact("turns", String(s.turns)) +
-        fact("events", String(s.total)) +
-        fact("started", shortTimestamp(s.timestamp));
+        '<div class="headline">' +
+          '<span class="status ' + statusClass + '">' + escapeHtml(s.status) + '</span>' +
+          '<span class="subtitle">' + escapeHtml(subtitle) + '</span>' +
+        '</div>' +
+        fact("llm time", llmStr) +
+        fact("tokens", tokensStr);
     }
 
     function fact(label, value, extraClass) {
@@ -914,13 +958,29 @@
       return ts.replace(/\.\d+/, "").replace("+00:00", "Z");
     }
 
+    function formatMs(ms) {
+      if (!ms || ms < 0) return "0s";
+      if (ms < 60000) return (ms / 1000).toFixed(1) + "s";
+      const seconds = Math.round(ms / 1000);
+      const m = Math.floor(seconds / 60);
+      const s = seconds - m * 60;
+      return m + "m " + s + "s";
+    }
+
     function renderChips(s) {
       if (!s) {
         el.chips.innerHTML = "";
         return;
       }
-      const parts = CLASSIFICATIONS.map(function (name) {
-        const count = s.counts[name] || 0;
+      const nonzero = CLASSIFICATIONS.filter(function (name) {
+        return (s.counts[name] || 0) > 0;
+      });
+      if (nonzero.length === 0) {
+        el.chips.innerHTML = '<span class="chip zero-state">no events</span>';
+        return;
+      }
+      const parts = nonzero.map(function (name) {
+        const count = s.counts[name];
         return (
           '<span class="chip ' + name + '">' +
           '<span class="dot"></span>' +

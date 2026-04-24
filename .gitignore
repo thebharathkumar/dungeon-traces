@@ -17,3 +17,12 @@ runs/*.tmp
 # Local-only Claude Code skills installed via third-party tooling
 # (e.g. `npx uipro-cli init --ai claude`). Not part of the submission.
 .claude/
+
+# Tooling artifacts produced by the dev workflow.
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/

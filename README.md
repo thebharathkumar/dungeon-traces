@@ -40,6 +40,18 @@ cp .env.example .env
 
 The `langfuse` package is listed in `requirements.txt` but is optional at runtime. If `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY` are not set, the Langfuse sink quietly disables itself and runs still produce the local NDJSON and JSON trace files.
 
+### Dev install
+
+For working on the codebase rather than just running it:
+
+```
+pip install -e .[dev]
+pre-commit install
+pytest
+```
+
+`pip install -e .[dev]` pulls in `pytest`, `pytest-cov`, `hypothesis`, `mypy`, `ruff`, and `tenacity` (the runtime retry dep). `pre-commit install` registers the ruff + ruff-format hooks declared in `.pre-commit-config.yaml`. `pytest` runs the full suite (pytest-style tests under `tests/`, including Hypothesis property tests for world generation and belief invariants).
+
 ## Run
 
 Single run with your own seed:
@@ -48,7 +60,31 @@ Single run with your own seed:
 python -m dungeon.main --seed 42
 ```
 
-Optional flags: `--model <id>`, `--turn-limit <n>`, `--quiet`, `--out-dir <path>`, `--run-id <str>`.
+Optional flags:
+
+| flag | default | meaning |
+| ---- | ------- | ------- |
+| `--model` | `claude-haiku-4-5-20251001` | Anthropic model id |
+| `--turn-limit` | 60 | hard cap on game turns |
+| `--quiet` | off | suppress per-turn console output |
+| `--out-dir` | `runs` | where event/summary/trace files land |
+| `--run-id` | timestamp | override the auto-generated id |
+| `--log-level` | `WARNING` | level for `dungeon.*` loggers (DEBUG / INFO / WARNING / ERROR) |
+
+### Configuration
+
+World tunables live on a frozen `WorldConfig` dataclass in `dungeon/config.py`. `generate_world` and `run_game` both accept an optional `config=...` kwarg; the default reproduces the original behaviour. Tunables: `wall_density`, `stuck_threshold`, `turn_limit`, `max_generation_retries`.
+
+Transient LLM failures (timeouts, rate limits, 5xx) are retried with exponential backoff. Tunable via env:
+
+| env var | default | meaning |
+| ------- | ------- | ------- |
+| `DUNGEON_RETRY_MAX` | 5 | maximum attempts |
+| `DUNGEON_RETRY_INITIAL_WAIT` | 1.0 | initial wait, seconds |
+| `DUNGEON_RETRY_MAX_WAIT` | 30.0 | cap on wait between retries |
+| `DUNGEON_RETRY_MULTIPLIER` | 2.0 | exponential multiplier |
+
+Permanent errors (`BadRequestError`, auth, quota) propagate immediately — they would just burn tokens on retry.
 
 Reproduce the four included Phase 4 runs:
 
@@ -62,11 +98,13 @@ Offline smoke test (no API key needed, scripted fake client):
 python scripts/smoke_test.py
 ```
 
-Classifier unit tests:
+Or via pytest, which also runs the property-based tests, the classifier unit tests, the LLM-retry tests, and the EventLogger context-manager tests:
 
 ```
-python scripts/test_classifier.py
+pytest
 ```
+
+The legacy `scripts/smoke_test.py` and `scripts/test_classifier.py` shims are kept for backward compatibility — both delegate to pytest under the hood.
 
 ## View traces
 

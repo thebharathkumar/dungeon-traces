@@ -57,7 +57,10 @@ TOOL_SCHEMAS: list[dict] = [
         "input_schema": {
             "type": "object",
             "properties": {
-                "item": {"type": "string", "description": "Name of the item to pick up, e.g. 'key'."},
+                "item": {
+                    "type": "string",
+                    "description": "Name of the item to pick up, e.g. 'key'.",
+                },
             },
             "required": ["item"],
         },

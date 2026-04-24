@@ -51,7 +51,9 @@ def main() -> int:
     )
     parser.add_argument("--turn-limit", type=int, default=60)
     parser.add_argument("--quiet", action="store_true", help="suppress per-turn output")
-    parser.add_argument("--out-dir", default="runs", help="output directory for event and summary files")
+    parser.add_argument(
+        "--out-dir", default="runs", help="output directory for event and summary files"
+    )
     parser.add_argument("--run-id", default=None, help="override the generated run id")
     parser.add_argument(
         "--log-level",

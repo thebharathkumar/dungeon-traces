@@ -43,9 +43,7 @@ def test_generated_world_carries_config() -> None:
 
 def test_generation_fails_loudly_on_unsatisfiable_config() -> None:
     """A 1.0 wall density makes layout impossible; the error must point to it."""
-    impossible = WorldConfig(
-        wall_density=1.0, max_generation_retries=3
-    )
+    impossible = WorldConfig(wall_density=1.0, max_generation_retries=3)
     with pytest.raises(RuntimeError, match=r"wall_density=1\.0"):
         generate_world(seed=1, agent_ids=["A", "B"], config=impossible)
 
@@ -57,8 +55,6 @@ def test_low_wall_density_succeeds_first_try_for_most_seeds() -> None:
     # must succeed every time.
     for seed in range(20):
         ws = generate_world(seed=seed, agent_ids=["A", "B"], config=sparse)
-        wall_cells = sum(
-            1 for row in ws.grid for cell in row if cell.value == "wall"
-        )
+        wall_cells = sum(1 for row in ws.grid for cell in row if cell.value == "wall")
         # Only the bottom-right blocker is a wall.
         assert wall_cells == 1, f"seed={seed} unexpectedly had {wall_cells} walls"

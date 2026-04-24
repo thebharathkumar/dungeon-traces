@@ -134,10 +134,7 @@ def run_game(
     if turn_limit is None:
         turn_limit = config.turn_limit
     ws = generate_world(seed, agent_ids, config)
-    agents = {
-        aid: DungeonAgent(aid, client, model, ws.agent_positions[aid])
-        for aid in agent_ids
-    }
+    agents = {aid: DungeonAgent(aid, client, model, ws.agent_positions[aid]) for aid in agent_ids}
     if tracer is not None:
         tracer.start_run(
             run_id=run_id,
@@ -168,9 +165,7 @@ def run_game(
 
             record = agent.take_turn(ws)
 
-            sent_this_turn = [
-                _serialize_message(m) for m in ws.pending_messages[pending_before:]
-            ]
+            sent_this_turn = [_serialize_message(m) for m in ws.pending_messages[pending_before:]]
             unread_after = len(ws.inboxes[aid])
 
             if record.get("tool_name") == "move":
@@ -185,18 +180,13 @@ def run_game(
                     # in-bounds cells are legitimate exploration and do not
                     # count, matching the environment_constraint category
                     # the Phase 2 classifier uses.
-                    target = _move_target(
-                        ws.agent_positions[aid], record.get("tool_input") or {}
-                    )
+                    target = _move_target(ws.agent_positions[aid], record.get("tool_input") or {})
                     if target is not None and (
-                        target in agent.belief.seen_cells
-                        or not ws.in_bounds(target)
+                        target in agent.belief.seen_cells or not ws.in_bounds(target)
                     ):
                         ws.stuck_counter[aid] += 1
 
-            ws.agents_at_exit = {
-                a for a, p in ws.agent_positions.items() if p == ws.exit_position
-            }
+            ws.agents_at_exit = {a for a, p in ws.agent_positions.items() if p == ws.exit_position}
 
             event = None
             if event_logger is not None:
@@ -255,7 +245,9 @@ def run_game(
             summary={
                 "turns_played": ws.turn,
                 "final_positions": {aid: list(p) for aid, p in ws.agent_positions.items()},
-                "final_inventories": {aid: sorted(inv) for aid, inv in ws.agent_inventories.items()},
+                "final_inventories": {
+                    aid: sorted(inv) for aid, inv in ws.agent_inventories.items()
+                },
                 "door_locked": ws.door_locked,
                 "key_holder": ws.key_holder,
             },

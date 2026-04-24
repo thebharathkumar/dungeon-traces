@@ -89,7 +89,9 @@ class ScriptedClient:
 
 
 @pytest.fixture
-def scripted_client() -> Callable[[dict[str, list[tuple[str, str, dict[str, Any]]]]], ScriptedClient]:
+def scripted_client() -> Callable[
+    [dict[str, list[tuple[str, str, dict[str, Any]]]]], ScriptedClient
+]:
     """Factory fixture: ``client = scripted_client({'A': [...], 'B': [...]})``."""
 
     def _make(scripts: dict[str, list[tuple[str, str, dict[str, Any]]]]) -> ScriptedClient:
@@ -124,12 +126,12 @@ def belief_factory() -> Callable[..., dict[str, Any]]:
             "last_known_key_position": (
                 key_pos
                 if key_pos == "unknown"
-                else list(key_pos) if isinstance(key_pos, tuple) else key_pos
+                else list(key_pos)
+                if isinstance(key_pos, tuple)
+                else key_pos
             ),
             "last_known_door_locked": door_locked,
-            "last_known_other_position": (
-                other_pos if other_pos == "unknown" else list(other_pos)
-            ),
+            "last_known_other_position": (other_pos if other_pos == "unknown" else list(other_pos)),
             "facts_last_seen": facts_last_seen or {},
             "seen_cell_count": len(seen or []),
             "seen_cell_positions": sorted([list(p) for p in (seen or [])]),

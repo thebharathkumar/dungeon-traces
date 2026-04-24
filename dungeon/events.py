@@ -254,11 +254,7 @@ def classify_failure(
         return None
 
     self_id = belief_snapshot["self_id"]
-    relevant = [
-        d
-        for d in divergences
-        if _is_relevant_for_tool(tool_name, tool_input, d, result)
-    ]
+    relevant = [d for d in divergences if _is_relevant_for_tool(tool_name, tool_input, d, result)]
 
     for d in relevant:
         caused_by = d.get("caused_by_agent")

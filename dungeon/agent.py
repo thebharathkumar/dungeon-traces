@@ -209,14 +209,11 @@ class DungeonAgent:
     def _build_user_prompt(self, ws: WorldState) -> str:
         unread = len(ws.inboxes[self.agent_id])
         unread_line = (
-            f"You have {unread} unread message(s) in your inbox. "
-            "Call read_messages to see them."
+            f"You have {unread} unread message(s) in your inbox. Call read_messages to see them."
             if unread > 0
             else "You have no unread messages."
         )
-        feedback_block = (
-            f"\n{self.last_action_feedback}\n" if self.last_action_feedback else ""
-        )
+        feedback_block = f"\n{self.last_action_feedback}\n" if self.last_action_feedback else ""
         return (
             f"{self.belief.render_for_prompt(ws.turn)}\n"
             f"{feedback_block}"
@@ -298,7 +295,9 @@ class DungeonAgent:
             "usage": {
                 "input_tokens": getattr(usage, "input_tokens", None),
                 "output_tokens": getattr(usage, "output_tokens", None),
-            } if usage else None,
+            }
+            if usage
+            else None,
         }
 
 
@@ -342,10 +341,7 @@ def _format_last_action_feedback(
         item = tool_input.get("item", "?")
         target = tool_input.get("target", "?")
         reason = result.get("reason") or "no reason given"
-        return (
-            f"Last action: use_item(item='{item}', target='{target}') "
-            f"-> FAILED: {reason}"
-        )
+        return f"Last action: use_item(item='{item}', target='{target}') -> FAILED: {reason}"
 
     reason = result.get("reason") or result.get("note") or "unknown failure"
     return f"Last action: {tool_name}(...) -> FAILED: {reason}"

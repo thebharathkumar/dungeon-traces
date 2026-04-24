@@ -80,11 +80,7 @@ def _env_int(name: str, default: int) -> int:
 def _log_attempt(retry_state: RetryCallState) -> None:
     """Tenacity ``before_sleep`` hook: emit one info line per retry."""
     exc = retry_state.outcome.exception() if retry_state.outcome else None
-    next_wait = (
-        retry_state.next_action.sleep
-        if retry_state.next_action is not None
-        else 0.0
-    )
+    next_wait = retry_state.next_action.sleep if retry_state.next_action is not None else 0.0
     logger.warning(
         "LLM call attempt %d failed (%s); retrying in %.2fs",
         retry_state.attempt_number,

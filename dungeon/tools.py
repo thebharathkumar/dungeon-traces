@@ -289,6 +289,4 @@ def is_semantic_success(tool_name: str, result: dict) -> bool:
         return bool(result.get("moved"))
     if tool_name in ("pick_up", "use_item"):
         return bool(result.get("success"))
-    if tool_name in ("observe", "read_messages", "send_message"):
-        return True
-    return False
+    return tool_name in ("observe", "read_messages", "send_message")

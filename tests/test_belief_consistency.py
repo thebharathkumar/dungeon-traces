@@ -9,8 +9,7 @@ randomly drawn action sequences applied to a freshly generated world.
 
 from __future__ import annotations
 
-from hypothesis import HealthCheck, given, settings
-from hypothesis import strategies as st
+from hypothesis import HealthCheck, given, settings, strategies as st
 
 from dungeon.agent import DungeonAgent
 from dungeon.tools import execute_tool

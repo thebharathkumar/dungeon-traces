@@ -13,8 +13,7 @@ from __future__ import annotations
 
 from collections import deque
 
-from hypothesis import given, settings
-from hypothesis import strategies as st
+from hypothesis import given, settings, strategies as st
 
 from dungeon.world import (
     DEFAULT_TURN_LIMIT,

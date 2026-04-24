@@ -30,7 +30,7 @@ from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from ._serde import jsonify as _jsonify
 from .tools import DIRECTION_DELTAS, is_semantic_success
@@ -47,7 +47,7 @@ FAILURE_CATEGORIES = (
 TRACKED_FACTS = ("key_position", "door_locked", "other_agent_position")
 
 
-def _other_agent_id(self_id: str, truth: dict) -> Optional[str]:
+def _other_agent_id(self_id: str, truth: dict) -> str | None:
     for aid in truth.get("agent_positions", {}):
         if aid != self_id:
             return aid
@@ -201,9 +201,7 @@ def _is_relevant_for_tool(
     if tool_name == "use_item":
         if tool_input.get("item") == "key" and field_ == "door_locked":
             return True
-        if field_ == "key_position":
-            return True
-        return False
+        return field_ == "key_position"
     if tool_name == "move":
         blocked = result.get("blocked_by")
         if blocked == "other_agent":
@@ -228,7 +226,7 @@ def classify_failure(
     result: dict,
     belief_snapshot: Mapping[str, Any],
     divergences: list[dict],
-) -> Optional[str]:
+) -> str | None:
     """Assign one of four categories, or None on success.
 
     Heuristic, documented here so reviewers can audit the reasoning:
@@ -292,9 +290,9 @@ class Event:
     divergence_age: dict
     divergences: list
     message_context: dict
-    failure_classification: Optional[str]
+    failure_classification: str | None
     reasoning: str
-    usage: Optional[dict]
+    usage: dict | None
 
 
 class EventLogger:
@@ -318,12 +316,14 @@ class EventLogger:
         self.out_dir = Path(out_dir)
         self.out_dir.mkdir(parents=True, exist_ok=True)
         self.path = self.out_dir / f"events_{run_id}.ndjson"
-        self._fh = open(self.path, "w", encoding="utf-8")
+        # The handle is owned by this instance and closed in __exit__ /
+        # finalize / close, so a `with open(...)` would defeat the design.
+        self._fh = open(self.path, "w", encoding="utf-8")  # noqa: SIM115
         self.event_count = 0
         self.classification_counts: Counter = Counter()
         self.events_in_memory: list[dict] = []
 
-    def __enter__(self) -> "EventLogger":
+    def __enter__(self) -> EventLogger:
         return self
 
     def __exit__(
@@ -417,7 +417,7 @@ class EventLogger:
             json.dump(summary, fh, indent=2, default=_json_default)
         return summary_path
 
-    def finalize(self, final_status: str, agents_at_exit: Optional[set] = None) -> None:
+    def finalize(self, final_status: str, agents_at_exit: set | None = None) -> None:
         """Patch the last event's world status and rewrite the NDJSON.
 
         Every row captures world_truth_state BEFORE its action, so even the

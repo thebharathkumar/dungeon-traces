@@ -25,7 +25,7 @@ import os
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional, Protocol
+from typing import Any, Protocol
 
 logger = logging.getLogger(__name__)
 
@@ -53,8 +53,8 @@ class TraceSink(Protocol):
         system: str,
         user_prompt: str,
         output_blocks: list,
-        usage: Optional[dict],
-        latency_ms: Optional[int],
+        usage: dict | None,
+        latency_ms: int | None,
         model: str,
     ) -> None: ...
     def log_tool_call(
@@ -63,7 +63,7 @@ class TraceSink(Protocol):
         name: str,
         tool_input: dict,
         output: dict,
-        latency_ms: Optional[int],
+        latency_ms: int | None,
     ) -> None: ...
     def end_turn(self, *, outcome: dict) -> None: ...
     def end_run(self, *, status: str, summary: dict) -> None: ...
@@ -80,8 +80,8 @@ class JsonTraceSink:
     run_id: str
     out_dir: Path = field(default_factory=lambda: Path("runs"))
     _data: dict = field(default_factory=dict)
-    _current_turn: Optional[dict] = field(default=None)
-    path: Optional[Path] = field(default=None)
+    _current_turn: dict | None = field(default=None)
+    path: Path | None = field(default=None)
 
     def __post_init__(self) -> None:
         self.out_dir = Path(self.out_dir)
@@ -116,8 +116,8 @@ class JsonTraceSink:
         system: str,
         user_prompt: str,
         output_blocks: list,
-        usage: Optional[dict],
-        latency_ms: Optional[int],
+        usage: dict | None,
+        latency_ms: int | None,
         model: str,
     ) -> None:
         if self._current_turn is None:
@@ -137,7 +137,7 @@ class JsonTraceSink:
         name: str,
         tool_input: dict,
         output: dict,
-        latency_ms: Optional[int],
+        latency_ms: int | None,
     ) -> None:
         if self._current_turn is None:
             return
@@ -177,7 +177,7 @@ class LangfuseSink:
         self._lf = None
         self._trace = None
         self._turn_span = None
-        self._model: Optional[str] = None
+        self._model: str | None = None
         try:
             from langfuse import Langfuse  # type: ignore
 
@@ -227,8 +227,8 @@ class LangfuseSink:
         system: str,
         user_prompt: str,
         output_blocks: list,
-        usage: Optional[dict],
-        latency_ms: Optional[int],
+        usage: dict | None,
+        latency_ms: int | None,
         model: str,
     ) -> None:
         if not self.enabled or self._turn_span is None:
@@ -252,7 +252,7 @@ class LangfuseSink:
         name: str,
         tool_input: dict,
         output: dict,
-        latency_ms: Optional[int],
+        latency_ms: int | None,
     ) -> None:
         if not self.enabled or self._turn_span is None:
             return

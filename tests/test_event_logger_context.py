@@ -23,10 +23,15 @@ def test_context_manager_closes_file_on_clean_exit(runs_dir: Path) -> None:
 
 
 def test_context_manager_closes_file_on_exception(runs_dir: Path) -> None:
-    with pytest.raises(RuntimeError, match="boom"):
-        with EventLogger(run_id="ctx-exc", out_dir=runs_dir) as logger:
-            assert not logger._fh.closed
-            raise RuntimeError("boom")
+    # Combined `with` keeps both contexts visible; the multi-statement
+    # body is intentional because the whole point of the test is that
+    # the EventLogger __exit__ runs even when the body raises.
+    with (  # noqa: PT012
+        pytest.raises(RuntimeError, match="boom"),
+        EventLogger(run_id="ctx-exc", out_dir=runs_dir) as logger,
+    ):
+        assert not logger._fh.closed
+        raise RuntimeError("boom")
     assert logger._fh.closed
 
 

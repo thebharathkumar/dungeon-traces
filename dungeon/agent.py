@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
 from ._serde import jsonify as _jsonify
 from .llm import call_with_retry
@@ -118,10 +118,13 @@ class BeliefState:
                     self.facts_last_seen["key_position"] = turn
 
         elif tool_name == "use_item":
-            if result.get("success"):
-                if tool_input.get("item") == "key" and tool_input.get("target") == "door":
-                    self.last_known_door_locked = False
-                    self.facts_last_seen["door_locked"] = turn
+            if (
+                result.get("success")
+                and tool_input.get("item") == "key"
+                and tool_input.get("target") == "door"
+            ):
+                self.last_known_door_locked = False
+                self.facts_last_seen["door_locked"] = turn
 
         elif tool_name == "read_messages":
             for m in result.get("messages", []):
@@ -143,7 +146,7 @@ class BeliefState:
             "last_known_other_position": _jsonify(self.last_known_other_position),
             "facts_last_seen": dict(self.facts_last_seen),
             "seen_cell_count": len(self.seen_cells),
-            "seen_cell_positions": sorted([list(p) for p in self.seen_cells.keys()]),
+            "seen_cell_positions": sorted([list(p) for p in self.seen_cells]),
         }
 
     def render_for_prompt(self, turn: int) -> str:
@@ -168,7 +171,7 @@ class BeliefState:
         return "\n".join(lines)
 
 
-def _describe_fact(value: Any, last_seen_turn: Optional[int], now_turn: int) -> str:
+def _describe_fact(value: Any, last_seen_turn: int | None, now_turn: int) -> str:
     if value == "unknown" or value is None:
         return "unknown (never observed)"
     if last_seen_turn is None:
@@ -204,7 +207,7 @@ class DungeonAgent:
         # rendered into the next user prompt so the model sees that (say) its
         # last move bumped a wall. Cleared to None on success since the belief
         # snapshot already reflects the new position.
-        self.last_action_feedback: Optional[str] = None
+        self.last_action_feedback: str | None = None
 
     def _build_user_prompt(self, ws: WorldState) -> str:
         unread = len(ws.inboxes[self.agent_id])
@@ -237,7 +240,7 @@ class DungeonAgent:
         llm_latency_ms = int((time.perf_counter() - t0) * 1000)
 
         reasoning = ""
-        tool_name: Optional[str] = None
+        tool_name: str | None = None
         tool_input: dict = {}
         serialized_blocks: list[dict] = []
         for block in response.content:
@@ -302,12 +305,12 @@ class DungeonAgent:
 
 
 def _format_last_action_feedback(
-    tool_name: Optional[str],
+    tool_name: str | None,
     tool_input: dict,
     result: dict,
     semantic_success: bool,
     current_pos: Pos,
-) -> Optional[str]:
+) -> str | None:
     """Compact one-line feedback to thread into the next turn's prompt.
 
     Only emitted on failure. Successes are already reflected in the updated

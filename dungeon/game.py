@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import copy
 from dataclasses import dataclass
-from typing import Any, Optional, Protocol
+from typing import Any, Protocol
 
 from .agent import DungeonAgent
 from .config import DEFAULT_WORLD_CONFIG, WorldConfig
@@ -69,7 +69,7 @@ def _fmt_args(args: dict) -> str:
     return ", ".join(f"{k}={v!r}" for k, v in args.items())
 
 
-def _move_target(pos: Pos, tool_input: dict) -> Optional[Pos]:
+def _move_target(pos: Pos, tool_input: dict) -> Pos | None:
     direction = tool_input.get("direction")
     delta = DIRECTION_DELTAS.get(direction) if direction else None
     if delta is None:
@@ -120,11 +120,11 @@ def run_game(
     client: Any,
     model: str,
     run_id: str,
-    turn_limit: Optional[int] = None,
-    console_logger: Optional[StepLogger] = None,
-    event_logger: Optional[EventLogger] = None,
-    tracer: Optional[MultiSink] = None,
-    agent_ids: Optional[list[str]] = None,
+    turn_limit: int | None = None,
+    console_logger: StepLogger | None = None,
+    event_logger: EventLogger | None = None,
+    tracer: MultiSink | None = None,
+    agent_ids: list[str] | None = None,
     config: WorldConfig = DEFAULT_WORLD_CONFIG,
 ) -> WorldState:
     agent_ids = agent_ids or ["A", "B"]

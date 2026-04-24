@@ -20,7 +20,6 @@ from dungeon.events import EventLogger
 from dungeon.game import ConsoleLogger, run_game
 from dungeon.tracing import JsonTraceSink, MultiSink
 
-
 # Seed 42 places key at (0,4), A at (5,3), B at (5,1). The scripts are
 # hand-picked to exercise every classifier category at least once.
 _SCRIPTS = {

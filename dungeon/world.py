@@ -11,7 +11,6 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 from .config import DEFAULT_WORLD_CONFIG, WorldConfig
 
@@ -43,13 +42,13 @@ class Message:
 @dataclass
 class WorldState:
     grid: list[list[CellType]]
-    key_position: Optional[Pos]
+    key_position: Pos | None
     door_position: Pos
     exit_position: Pos
     door_locked: bool
     agent_positions: dict[str, Pos]
     agent_inventories: dict[str, set[str]]
-    key_holder: Optional[str]
+    key_holder: str | None
     inboxes: dict[str, list[Message]]
     pending_messages: list[Message]
     agents_at_exit: set[str] = field(default_factory=set)
@@ -78,11 +77,9 @@ class WorldState:
             return False
         if self.cell_type(pos) == CellType.WALL:
             return False
-        if pos == self.door_position and self.door_locked:
-            return False
-        return True
+        return not (pos == self.door_position and self.door_locked)
 
-    def agent_at(self, pos: Pos) -> Optional[str]:
+    def agent_at(self, pos: Pos) -> str | None:
         for aid, p in self.agent_positions.items():
             if p == pos:
                 return aid
@@ -172,7 +169,7 @@ def _try_generate(
     rng: random.Random,
     agent_ids: list[str],
     config: WorldConfig,
-) -> Optional[WorldState]:
+) -> WorldState | None:
     grid = [[CellType.EMPTY for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 
     exit_pos: Pos = (GRID_SIZE - 1, GRID_SIZE - 1)
@@ -201,7 +198,7 @@ def _try_generate(
         return None
 
     # Key: anywhere far enough from the exit pocket to force actual exploration.
-    key_pos: Optional[Pos] = None
+    key_pos: Pos | None = None
     for cand in empties:
         if _manhattan(cand, exit_pos) >= 4:
             key_pos = cand
@@ -241,7 +238,7 @@ def _try_generate(
         key_holder=None,
         inboxes={aid: [] for aid in agent_ids},
         pending_messages=[],
-        stuck_counter={aid: 0 for aid in agent_ids},
+        stuck_counter=dict.fromkeys(agent_ids, 0),
         config=config,
     )
 

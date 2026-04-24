@@ -28,7 +28,9 @@ def test_default_config_matches_module_constants() -> None:
 
 def test_world_config_is_frozen() -> None:
     cfg = WorldConfig()
-    with pytest.raises(Exception):  # FrozenInstanceError, but importable name varies
+    # dataclasses.FrozenInstanceError, but the public name has shifted
+    # between Python versions, so match by message instead of class.
+    with pytest.raises(Exception, match="(?i)frozen|cannot assign"):  # noqa: B017
         cfg.wall_density = 0.5  # type: ignore[misc]
 
 

@@ -26,11 +26,13 @@ import json
 import os
 import uuid
 from collections import Counter
-from dataclasses import asdict, dataclass, field
+from collections.abc import Mapping
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
+from ._serde import jsonify as _jsonify
 from .tools import DIRECTION_DELTAS, is_semantic_success
 
 FAILURE_CATEGORIES = (
@@ -43,12 +45,6 @@ FAILURE_CATEGORIES = (
 # Fields we track belief for. Everything else the agent knows is either
 # always-accurate (own position, own inventory) or not worth diffing.
 TRACKED_FACTS = ("key_position", "door_locked", "other_agent_position")
-
-
-def _jsonify(value: Any) -> Any:
-    if isinstance(value, tuple):
-        return list(value)
-    return value
 
 
 def _other_agent_id(self_id: str, truth: dict) -> Optional[str]:
@@ -84,9 +80,9 @@ def _key_matches(believed: Any, actual: Any) -> bool:
 
 
 def compute_divergences(
-    belief_snapshot: dict,
-    truth_snapshot: dict,
-    provenance: dict,
+    belief_snapshot: Mapping[str, Any],
+    truth_snapshot: Mapping[str, Any],
+    provenance: Mapping[str, Any],
     now_turn: int,
 ) -> list[dict]:
     """Diff a belief snapshot against ground truth. One entry per diverged fact.
@@ -164,7 +160,7 @@ def compute_divergences(
 
 
 def belief_accuracy_map(
-    belief_snapshot: dict,
+    belief_snapshot: Mapping[str, Any],
     divergences: list[dict],
 ) -> dict:
     """Per-fact label: 'match' | 'diverged' | 'unknown'."""
@@ -230,7 +226,7 @@ def classify_failure(
     tool_name: str,
     tool_input: dict,
     result: dict,
-    belief_snapshot: dict,
+    belief_snapshot: Mapping[str, Any],
     divergences: list[dict],
 ) -> Optional[str]:
     """Assign one of four categories, or None on success.

@@ -13,6 +13,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
+from ._serde import jsonify as _jsonify
 from .llm import call_with_retry
 from .tools import DIRECTION_DELTAS, TOOL_SCHEMAS, execute_tool, is_semantic_success
 from .world import WorldState
@@ -176,12 +177,6 @@ def _describe_fact(value: Any, last_seen_turn: Optional[int], now_turn: int) -> 
     if age == 0:
         return f"{_jsonify(value)} (observed this turn)"
     return f"{_jsonify(value)} (observed {age} turn{'s' if age != 1 else ''} ago)"
-
-
-def _jsonify(value: Any) -> Any:
-    if isinstance(value, tuple):
-        return list(value)
-    return value
 
 
 class DungeonAgent:

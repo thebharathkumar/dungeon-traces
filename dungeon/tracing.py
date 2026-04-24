@@ -20,11 +20,14 @@ missing. Runs should succeed in any environment.
 from __future__ import annotations
 
 import json
+import logging
 import os
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional, Protocol
+
+logger = logging.getLogger(__name__)
 
 
 def _now() -> str:
@@ -191,7 +194,10 @@ class LangfuseSink:
         try:
             return fn(*args, **kwargs)
         except Exception as e:
-            print(f"[langfuse] swallowed sink error: {e}")
+            # Langfuse failures are non-fatal: the run should still
+            # complete with a local NDJSON trace. Surface at WARNING so
+            # `--log-level WARNING` users see persistent breakage.
+            logger.warning("langfuse sink error: %s", e)
             return None
 
     def start_run(self, *, run_id: str, seed: int, model: str, metadata: dict) -> None:
@@ -286,7 +292,7 @@ class MultiSink:
             try:
                 fn(**kwargs)
             except Exception as e:
-                print(f"[tracing:{type(sink).__name__}.{method}] swallowed: {e}")
+                logger.warning("tracing sink %s.%s failed: %s", type(sink).__name__, method, e)
 
     def start_run(self, **kwargs) -> None:
         self._fanout("start_run", **kwargs)

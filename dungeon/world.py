@@ -13,10 +13,14 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
+from .config import DEFAULT_WORLD_CONFIG, WorldConfig
+
 GRID_SIZE = 8
-WALL_DENSITY = 0.17
-STUCK_THRESHOLD = 6
-DEFAULT_TURN_LIMIT = 60
+# The remaining tunables now live on WorldConfig; these aliases preserve
+# the original public surface so any external import keeps working.
+WALL_DENSITY = DEFAULT_WORLD_CONFIG.wall_density
+STUCK_THRESHOLD = DEFAULT_WORLD_CONFIG.stuck_threshold
+DEFAULT_TURN_LIMIT = DEFAULT_WORLD_CONFIG.turn_limit
 
 
 class CellType(str, Enum):
@@ -57,6 +61,9 @@ class WorldState:
     # The Phase 2 classifier uses this to distinguish coordination_failure
     # (change caused by the other agent) from information_lag.
     provenance: dict[str, dict] = field(default_factory=dict)
+    # Read-only run config. Game loop and stuck-detection consult this
+    # instead of the module-level constants when present.
+    config: WorldConfig = field(default_factory=lambda: DEFAULT_WORLD_CONFIG)
 
     def in_bounds(self, pos: Pos) -> bool:
         x, y = pos
@@ -135,14 +142,22 @@ class WorldState:
         }
 
 
-def generate_world(seed: int, agent_ids: list[str]) -> WorldState:
+def generate_world(
+    seed: int,
+    agent_ids: list[str],
+    config: WorldConfig = DEFAULT_WORLD_CONFIG,
+) -> WorldState:
     """Generate a playable world. Retries until connectivity constraints are met."""
     rng = random.Random(seed)
-    for _ in range(500):
-        ws = _try_generate(rng, agent_ids)
+    for _ in range(config.max_generation_retries):
+        ws = _try_generate(rng, agent_ids, config)
         if ws is not None:
             return ws
-    raise RuntimeError(f"Failed to generate a valid world from seed {seed}")
+    raise RuntimeError(
+        f"Failed to generate a valid world from seed {seed} "
+        f"after {config.max_generation_retries} attempts "
+        f"(wall_density={config.wall_density})"
+    )
 
 
 def _chebyshev(a: Pos, b: Pos) -> int:
@@ -153,7 +168,11 @@ def _manhattan(a: Pos, b: Pos) -> int:
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
-def _try_generate(rng: random.Random, agent_ids: list[str]) -> Optional[WorldState]:
+def _try_generate(
+    rng: random.Random,
+    agent_ids: list[str],
+    config: WorldConfig,
+) -> Optional[WorldState]:
     grid = [[CellType.EMPTY for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 
     exit_pos: Pos = (GRID_SIZE - 1, GRID_SIZE - 1)
@@ -168,7 +187,7 @@ def _try_generate(rng: random.Random, agent_ids: list[str]) -> Optional[WorldSta
         for x in range(GRID_SIZE):
             if (x, y) in reserved:
                 continue
-            if rng.random() < WALL_DENSITY:
+            if rng.random() < config.wall_density:
                 grid[y][x] = CellType.WALL
 
     empties = [
@@ -223,6 +242,7 @@ def _try_generate(rng: random.Random, agent_ids: list[str]) -> Optional[WorldSta
         inboxes={aid: [] for aid in agent_ids},
         pending_messages=[],
         stuck_counter={aid: 0 for aid in agent_ids},
+        config=config,
     )
 
 

@@ -19,6 +19,7 @@ from datetime import datetime, timezone
 
 from .events import EventLogger
 from .game import ConsoleLogger, run_game
+from .logging_setup import setup_logging
 from .tracing import build_default_tracer
 from .world import render_ascii
 
@@ -52,7 +53,14 @@ def main() -> int:
     parser.add_argument("--quiet", action="store_true", help="suppress per-turn output")
     parser.add_argument("--out-dir", default="runs", help="output directory for event and summary files")
     parser.add_argument("--run-id", default=None, help="override the generated run id")
+    parser.add_argument(
+        "--log-level",
+        default="WARNING",
+        help="log level for dungeon.* loggers (DEBUG, INFO, WARNING, ERROR)",
+    )
     args = parser.parse_args()
+
+    setup_logging(args.log_level)
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
         print("ANTHROPIC_API_KEY is not set. Copy .env.example to .env and fill it in.")

@@ -20,10 +20,11 @@ from dataclasses import dataclass
 from typing import Any, Optional, Protocol
 
 from .agent import DungeonAgent
+from .config import DEFAULT_WORLD_CONFIG, WorldConfig
 from .events import EventLogger
 from .tools import DIRECTION_DELTAS
 from .tracing import MultiSink
-from .world import DEFAULT_TURN_LIMIT, STUCK_THRESHOLD, Message, Pos, WorldState, generate_world
+from .world import Message, Pos, WorldState, generate_world
 
 
 class StepLogger(Protocol):
@@ -108,7 +109,7 @@ def _check_end(ws: WorldState, turn_limit: int) -> bool:
     if ws.turn >= turn_limit:
         ws.status = "timeout"
         return True
-    if all(c >= STUCK_THRESHOLD for c in ws.stuck_counter.values()):
+    if all(c >= ws.config.stuck_threshold for c in ws.stuck_counter.values()):
         ws.status = "stuck"
         return True
     return False
@@ -119,14 +120,20 @@ def run_game(
     client: Any,
     model: str,
     run_id: str,
-    turn_limit: int = DEFAULT_TURN_LIMIT,
+    turn_limit: Optional[int] = None,
     console_logger: Optional[StepLogger] = None,
     event_logger: Optional[EventLogger] = None,
     tracer: Optional[MultiSink] = None,
     agent_ids: Optional[list[str]] = None,
+    config: WorldConfig = DEFAULT_WORLD_CONFIG,
 ) -> WorldState:
     agent_ids = agent_ids or ["A", "B"]
-    ws = generate_world(seed, agent_ids)
+    # An explicit turn_limit kwarg overrides the value baked into config,
+    # so existing CLI invocations (which pass turn_limit directly) keep
+    # working unchanged.
+    if turn_limit is None:
+        turn_limit = config.turn_limit
+    ws = generate_world(seed, agent_ids, config)
     agents = {
         aid: DungeonAgent(aid, client, model, ws.agent_positions[aid])
         for aid in agent_ids

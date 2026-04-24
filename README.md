@@ -104,7 +104,7 @@ Or via pytest, which also runs the property-based tests, the classifier unit tes
 pytest
 ```
 
-The legacy `scripts/smoke_test.py` and `scripts/test_classifier.py` shims are kept for backward compatibility — both delegate to pytest under the hood.
+The legacy `scripts/smoke_test.py` and `scripts/test_classifier.py` entrypoints have been replaced by `tests/test_smoke.py` and `tests/test_classifier.py`; run them with `pytest`.
 
 ## View traces
 

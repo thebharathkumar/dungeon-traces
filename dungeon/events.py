@@ -311,6 +311,14 @@ class EventLogger:
     Opens the file eagerly so a crashed run still leaves a partial log
     on disk. Also keeps a small in-memory summary so main.py can print
     it after the game ends without re-reading the NDJSON.
+
+    Usable as a context manager so the file handle is guaranteed to be
+    closed even if the surrounding code raises before reaching
+    :meth:`finalize`::
+
+        with EventLogger(run_id, out_dir) as logger:
+            run_game(..., event_logger=logger)
+            logger.finalize(ws.status, ws.agents_at_exit)
     """
 
     def __init__(self, run_id: str, out_dir: str | os.PathLike = "runs") -> None:
@@ -322,6 +330,20 @@ class EventLogger:
         self.event_count = 0
         self.classification_counts: Counter = Counter()
         self.events_in_memory: list[dict] = []
+
+    def __enter__(self) -> "EventLogger":
+        return self
+
+    def __exit__(
+        self,
+        exc_type: object,
+        exc: object,
+        tb: object,
+    ) -> None:
+        # Always close the file handle. ``finalize`` is *not* called
+        # automatically because it needs the final world status, which
+        # the caller owns; if the caller forgot, we still avoid a leak.
+        self.close()
 
     def log_step(
         self,

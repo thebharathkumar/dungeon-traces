@@ -13,6 +13,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
+from .llm import call_with_retry
 from .tools import DIRECTION_DELTAS, TOOL_SCHEMAS, execute_tool, is_semantic_success
 from .world import WorldState
 
@@ -233,7 +234,8 @@ class DungeonAgent:
     def take_turn(self, ws: WorldState) -> dict:
         user_prompt = self._build_user_prompt(ws)
         t0 = time.perf_counter()
-        response = self.client.messages.create(
+        response = call_with_retry(
+            self.client,
             model=self.model,
             max_tokens=512,
             system=self.system_prompt,

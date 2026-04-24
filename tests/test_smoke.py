@@ -62,30 +62,30 @@ def test_smoke_full_game_loop(scripted_client, runs_dir: Path) -> None:
     run_id = "smoke_test"
     client = scripted_client(_SCRIPTS)
     console_logger = ConsoleLogger(quiet=True)
-    event_logger = EventLogger(run_id=run_id, out_dir=runs_dir)
     tracer = MultiSink(sinks=[JsonTraceSink(run_id=run_id, out_dir=runs_dir)])
 
-    ws = run_game(
-        seed=42,
-        client=client,
-        model="mock-model",
-        run_id=run_id,
-        turn_limit=20,
-        console_logger=console_logger,
-        event_logger=event_logger,
-        tracer=tracer,
-    )
+    with EventLogger(run_id=run_id, out_dir=runs_dir) as event_logger:
+        ws = run_game(
+            seed=42,
+            client=client,
+            model="mock-model",
+            run_id=run_id,
+            turn_limit=20,
+            console_logger=console_logger,
+            event_logger=event_logger,
+            tracer=tracer,
+        )
 
-    summary = {
-        "run_id": run_id,
-        "seed": 42,
-        "status": ws.status,
-        "turns_played": ws.turn,
-        "total_events": event_logger.event_count,
-        "classification_counts": dict(event_logger.classification_counts),
-    }
-    event_logger.write_run_summary(summary)
-    event_logger.finalize(ws.status, ws.agents_at_exit)
+        summary = {
+            "run_id": run_id,
+            "seed": 42,
+            "status": ws.status,
+            "turns_played": ws.turn,
+            "total_events": event_logger.event_count,
+            "classification_counts": dict(event_logger.classification_counts),
+        }
+        event_logger.write_run_summary(summary)
+        event_logger.finalize(ws.status, ws.agents_at_exit)
 
     # The game must terminate cleanly with a known status.
     assert ws.status in {"running", "success", "timeout", "stuck"}
@@ -127,19 +127,19 @@ def test_smoke_exercises_classifier_branches(scripted_client, runs_dir: Path) ->
     """The hand-picked script must surface multiple classification categories."""
     run_id = "smoke_branches"
     client = scripted_client(_SCRIPTS)
-    event_logger = EventLogger(run_id=run_id, out_dir=runs_dir)
 
-    ws = run_game(
-        seed=42,
-        client=client,
-        model="mock-model",
-        run_id=run_id,
-        turn_limit=20,
-        console_logger=ConsoleLogger(quiet=True),
-        event_logger=event_logger,
-        tracer=None,
-    )
-    event_logger.finalize(ws.status, ws.agents_at_exit)
+    with EventLogger(run_id=run_id, out_dir=runs_dir) as event_logger:
+        ws = run_game(
+            seed=42,
+            client=client,
+            model="mock-model",
+            run_id=run_id,
+            turn_limit=20,
+            console_logger=ConsoleLogger(quiet=True),
+            event_logger=event_logger,
+            tracer=None,
+        )
+        event_logger.finalize(ws.status, ws.agents_at_exit)
 
     counts = dict(event_logger.classification_counts)
     # At least one failure category must fire and at least one success must be

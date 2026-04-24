@@ -64,48 +64,48 @@ def main() -> int:
 
     client = Anthropic()
     console_logger = ConsoleLogger(quiet=args.quiet)
-    event_logger = EventLogger(run_id=run_id, out_dir=args.out_dir)
     tracer = build_default_tracer(run_id=run_id, out_dir=args.out_dir)
 
     ws = None
-    try:
-        ws = run_game(
-            seed=seed,
-            client=client,
-            model=args.model,
-            run_id=run_id,
-            turn_limit=args.turn_limit,
-            console_logger=console_logger,
-            event_logger=event_logger,
-            tracer=tracer,
-        )
-    finally:
-        final_status = ws.status if ws is not None else "crashed"
-        agents_at_exit = ws.agents_at_exit if ws is not None else None
-        summary = {
-            "run_id": run_id,
-            "seed": seed,
-            "model": args.model,
-            "turn_limit": args.turn_limit,
-            "status": final_status,
-            "turns_played": event_logger.events_in_memory[-1]["turn"]
-            if event_logger.events_in_memory
-            else 0,
-            "total_events": event_logger.event_count,
-            "classification_counts": dict(event_logger.classification_counts),
-            "events_path": str(event_logger.path),
-        }
-        summary_path = event_logger.write_run_summary(summary)
-        event_logger.finalize(final_status, agents_at_exit)
-        trace_path = None
-        for sink in getattr(tracer, "sinks", []):
-            if hasattr(sink, "path") and sink.path is not None:
-                trace_path = sink.path
-                break
-        print(f"\nWrote events to {event_logger.path}")
-        print(f"Wrote summary to {summary_path}")
-        if trace_path:
-            print(f"Wrote trace  to {trace_path}")
+    with EventLogger(run_id=run_id, out_dir=args.out_dir) as event_logger:
+        try:
+            ws = run_game(
+                seed=seed,
+                client=client,
+                model=args.model,
+                run_id=run_id,
+                turn_limit=args.turn_limit,
+                console_logger=console_logger,
+                event_logger=event_logger,
+                tracer=tracer,
+            )
+        finally:
+            final_status = ws.status if ws is not None else "crashed"
+            agents_at_exit = ws.agents_at_exit if ws is not None else None
+            summary = {
+                "run_id": run_id,
+                "seed": seed,
+                "model": args.model,
+                "turn_limit": args.turn_limit,
+                "status": final_status,
+                "turns_played": event_logger.events_in_memory[-1]["turn"]
+                if event_logger.events_in_memory
+                else 0,
+                "total_events": event_logger.event_count,
+                "classification_counts": dict(event_logger.classification_counts),
+                "events_path": str(event_logger.path),
+            }
+            summary_path = event_logger.write_run_summary(summary)
+            event_logger.finalize(final_status, agents_at_exit)
+            trace_path = None
+            for sink in getattr(tracer, "sinks", []):
+                if hasattr(sink, "path") and sink.path is not None:
+                    trace_path = sink.path
+                    break
+            print(f"\nWrote events to {event_logger.path}")
+            print(f"Wrote summary to {summary_path}")
+            if trace_path:
+                print(f"Wrote trace  to {trace_path}")
 
     print()
     print("Final map:")
